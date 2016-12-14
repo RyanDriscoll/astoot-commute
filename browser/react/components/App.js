@@ -4,7 +4,7 @@ export default (props) => {
   console.log(props.children);
   return (
     <div id="main" className="container-fluid">
-      <h1>Hello</h1>
+      <h1>Astoot Commute</h1>
       <div className="col-xs-12">
         {
           props.children && React.cloneElement(props.children, props)
