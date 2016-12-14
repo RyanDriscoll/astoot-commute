@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 
 export default (props) => {
-  console.log(props.children);
   return (
     <div id="main" className="container-fluid">
       <h1>Astoot Commute</h1>

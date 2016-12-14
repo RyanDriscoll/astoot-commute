@@ -62,20 +62,34 @@
 	
 	var _store2 = _interopRequireDefault(_store);
 	
-	var _ctaActionCreators = __webpack_require__(284);
+	var _ctaActionCreators = __webpack_require__(279);
 	
-	var _App = __webpack_require__(278);
+	var _App = __webpack_require__(305);
 	
 	var _App2 = _interopRequireDefault(_App);
 	
-	var _RoutesContainer = __webpack_require__(282);
+	var _RoutesContainer = __webpack_require__(306);
 	
 	var _RoutesContainer2 = _interopRequireDefault(_RoutesContainer);
+	
+	var _RouteContainer = __webpack_require__(310);
+	
+	var _RouteContainer2 = _interopRequireDefault(_RouteContainer);
+	
+	var _FilterableRoutesContainer = __webpack_require__(308);
+	
+	var _FilterableRoutesContainer2 = _interopRequireDefault(_FilterableRoutesContainer);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var onRoutesEnter = function onRoutesEnter() {
 	  _store2.default.dispatch((0, _ctaActionCreators.loadAllRoutes)());
+	};
+	
+	var onSelectedRouteEnter = function onSelectedRouteEnter(nextRouterState) {
+	  console.log("!!!!!!!!!!!", nextRouterState);
+	  var routeId = nextRouterState.params.routeId;
+	  _store2.default.dispatch((0, _ctaActionCreators.loadSelectedRoute)(routeId));
 	};
 	
 	_reactDom2.default.render(_react2.default.createElement(
@@ -88,7 +102,8 @@
 	      _reactRouter.Route,
 	      { path: '/', component: _App2.default },
 	      _react2.default.createElement(_reactRouter.IndexRedirect, { to: '/routes' }),
-	      _react2.default.createElement(_reactRouter.Route, { path: '/routes', component: _RoutesContainer2.default, onEnter: onRoutesEnter })
+	      _react2.default.createElement(_reactRouter.Route, { path: '/routes', component: _FilterableRoutesContainer2.default, onEnter: onRoutesEnter }),
+	      _react2.default.createElement(_reactRouter.Route, { path: '/routes/:routeId', component: _RouteContainer2.default, onEnter: onSelectedRouteEnter })
 	    )
 	  )
 	), document.getElementById('app'));
@@ -28802,11 +28817,11 @@
 	
 	var _reducers2 = _interopRequireDefault(_reducers);
 	
-	var _reduxLogger = __webpack_require__(271);
+	var _reduxLogger = __webpack_require__(272);
 	
 	var _reduxLogger2 = _interopRequireDefault(_reduxLogger);
 	
-	var _reduxThunk = __webpack_require__(277);
+	var _reduxThunk = __webpack_require__(278);
 	
 	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 	
@@ -28849,7 +28864,7 @@
 	  return newState;
 	};
 	
-	var _constants = __webpack_require__(279);
+	var _constants = __webpack_require__(271);
 	
 	var initialState = {
 	  selectedRoute: {},
@@ -28858,6 +28873,19 @@
 
 /***/ },
 /* 271 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var RECEIVE_BUS_ROUTES = exports.RECEIVE_BUS_ROUTES = 'RECEIVE_BUS_ROUTES';
+	
+	var RECEIVE_BUS_ROUTE = exports.RECEIVE_BUS_ROUTE = 'RECEIVE_BUS_ROUTE';
+
+/***/ },
+/* 272 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28868,11 +28896,11 @@
 	  value: true
 	});
 	
-	var _core = __webpack_require__(272);
+	var _core = __webpack_require__(273);
 	
-	var _helpers = __webpack_require__(273);
+	var _helpers = __webpack_require__(274);
 	
-	var _defaults = __webpack_require__(276);
+	var _defaults = __webpack_require__(277);
 	
 	var _defaults2 = _interopRequireDefault(_defaults);
 	
@@ -28975,7 +29003,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 272 */
+/* 273 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28985,9 +29013,9 @@
 	});
 	exports.printBuffer = printBuffer;
 	
-	var _helpers = __webpack_require__(273);
+	var _helpers = __webpack_require__(274);
 	
-	var _diff = __webpack_require__(274);
+	var _diff = __webpack_require__(275);
 	
 	var _diff2 = _interopRequireDefault(_diff);
 	
@@ -29116,7 +29144,7 @@
 	}
 
 /***/ },
-/* 273 */
+/* 274 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -29140,7 +29168,7 @@
 	var timer = exports.timer = typeof performance !== "undefined" && performance !== null && typeof performance.now === "function" ? performance : Date;
 
 /***/ },
-/* 274 */
+/* 275 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -29150,7 +29178,7 @@
 	});
 	exports.default = diffLogger;
 	
-	var _deepDiff = __webpack_require__(275);
+	var _deepDiff = __webpack_require__(276);
 	
 	var _deepDiff2 = _interopRequireDefault(_deepDiff);
 	
@@ -29236,7 +29264,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 275 */
+/* 276 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(global) {/*!
@@ -29665,7 +29693,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 276 */
+/* 277 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -29716,7 +29744,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 277 */
+/* 278 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -29744,56 +29772,7 @@
 	exports['default'] = thunk;
 
 /***/ },
-/* 278 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _react = __webpack_require__(1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	exports.default = function (props) {
-	  console.log(props.children);
-	  return _react2.default.createElement(
-	    "div",
-	    { id: "main", className: "container-fluid" },
-	    _react2.default.createElement(
-	      "h1",
-	      null,
-	      "Astoot Commute"
-	    ),
-	    _react2.default.createElement(
-	      "div",
-	      { className: "col-xs-12" },
-	      props.children && _react2.default.cloneElement(props.children, props)
-	    )
-	  );
-	};
-
-/***/ },
 /* 279 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	var RECEIVE_BUS_ROUTES = exports.RECEIVE_BUS_ROUTES = 'RECEIVE_BUS_ROUTES';
-	
-	var RECEIVE_BUS_ROUTE = exports.RECEIVE_BUS_ROUTE = 'RECEIVE_BUS_ROUTE';
-
-/***/ },
-/* 280 */,
-/* 281 */,
-/* 282 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -29801,102 +29780,13 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.loadSelectedRoute = exports.loadAllRoutes = exports.receieveSelectedRoute = exports.receiveRoutes = undefined;
 	
-	var _Routes = __webpack_require__(283);
-	
-	var _Routes2 = _interopRequireDefault(_Routes);
-	
-	var _reactRedux = __webpack_require__(241);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function mapStateToProps(state, ownProps) {
-	  console.log(state);
-	  return {
-	    routes: state.routes
-	
-	  };
-	}
-	
-	function mapDispatchToProps(dispatch, ownProps) {
-	
-	  return {};
-	}
-	
-	var RoutesContainer = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_Routes2.default);
-	
-	exports.default = RoutesContainer;
-
-/***/ },
-/* 283 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _react = __webpack_require__(1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _reactRouter = __webpack_require__(178);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	exports.default = function (props) {
-	  var routes = props.routes;
-	  console.log("!!!!!!!!!", routes);
-	
-	  return _react2.default.createElement(
-	    'div',
-	    null,
-	    _react2.default.createElement(
-	      'h1',
-	      null,
-	      'ROUTES'
-	    ),
-	    routes && routes.map(function (route) {
-	      return _react2.default.createElement(
-	        'div',
-	        { className: 'col-xs-12', key: route.rt },
-	        _react2.default.createElement(
-	          'h5',
-	          null,
-	          _react2.default.createElement(
-	            'span',
-	            null,
-	            route.rt
-	          ),
-	          '  ',
-	          _react2.default.createElement(
-	            'span',
-	            null,
-	            route.rtnm
-	          )
-	        )
-	      );
-	    })
-	  );
-	};
-
-/***/ },
-/* 284 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.loadAllRoutes = exports.receiveRoutes = undefined;
-	
-	var _axios = __webpack_require__(285);
+	var _axios = __webpack_require__(280);
 	
 	var _axios2 = _interopRequireDefault(_axios);
 	
-	var _constants = __webpack_require__(279);
+	var _constants = __webpack_require__(271);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -29904,6 +29794,13 @@
 	  return {
 	    type: _constants.RECEIVE_BUS_ROUTES,
 	    routes: routes
+	  };
+	};
+	
+	var receieveSelectedRoute = exports.receieveSelectedRoute = function receieveSelectedRoute(route) {
+	  return {
+	    type: _constants.RECEIVE_BUS_ROUTE,
+	    selectedRoute: route
 	  };
 	};
 	
@@ -29918,23 +29815,52 @@
 	    });
 	  };
 	};
+	
+	var loadSelectedRoute = exports.loadSelectedRoute = function loadSelectedRoute(routeId) {
+	  return function (dispatch) {
+	    var getAllRoutes = _axios2.default.get('/api/routes');
+	    var getRouteDirections = _axios2.default.get('/api/routes/' + routeId);
+	
+	    Promise.all([getAllRoutes, getRouteDirections]).then(function (resArray) {
+	      var allRoutes = resArray[0].data['bustime-response'].routes;
+	      var rtDirections = resArray[1].data['bustime-response'].directions;
+	      var route = allRoutes.filter(function (route) {
+	        return route.rt === routeId;
+	      })[0];
+	      route.directions = rtDirections;
+	      return route;
+	    }).then(function (selectedRoute) {
+	      return dispatch(receieveSelectedRoute(selectedRoute));
+	    })
+	
+	    // axios.get(`/api/routes/${routeId}`)
+	    // .then(res => res.data['bustime-response'])
+	    // .then(route => {
+	    //   route.routeId = routeId;
+	    //   return dispatch(receieveSelectedRoute(route));
+	    // })
+	    .catch(function (err) {
+	      console.error(err);
+	    });
+	  };
+	};
 
 /***/ },
-/* 285 */
+/* 280 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(286);
+	module.exports = __webpack_require__(281);
 
 /***/ },
-/* 286 */
+/* 281 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(287);
-	var bind = __webpack_require__(288);
-	var Axios = __webpack_require__(289);
-	var defaults = __webpack_require__(290);
+	var utils = __webpack_require__(282);
+	var bind = __webpack_require__(283);
+	var Axios = __webpack_require__(284);
+	var defaults = __webpack_require__(285);
 	
 	/**
 	 * Create an instance of Axios
@@ -29967,15 +29893,15 @@
 	};
 	
 	// Expose Cancel & CancelToken
-	axios.Cancel = __webpack_require__(307);
-	axios.CancelToken = __webpack_require__(308);
-	axios.isCancel = __webpack_require__(304);
+	axios.Cancel = __webpack_require__(302);
+	axios.CancelToken = __webpack_require__(303);
+	axios.isCancel = __webpack_require__(299);
 	
 	// Expose all/spread
 	axios.all = function all(promises) {
 	  return Promise.all(promises);
 	};
-	axios.spread = __webpack_require__(309);
+	axios.spread = __webpack_require__(304);
 	
 	module.exports = axios;
 	
@@ -29984,12 +29910,12 @@
 
 
 /***/ },
-/* 287 */
+/* 282 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var bind = __webpack_require__(288);
+	var bind = __webpack_require__(283);
 	
 	/*global toString:true*/
 	
@@ -30289,7 +30215,7 @@
 
 
 /***/ },
-/* 288 */
+/* 283 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -30306,17 +30232,17 @@
 
 
 /***/ },
-/* 289 */
+/* 284 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var defaults = __webpack_require__(290);
-	var utils = __webpack_require__(287);
-	var InterceptorManager = __webpack_require__(301);
-	var dispatchRequest = __webpack_require__(302);
-	var isAbsoluteURL = __webpack_require__(305);
-	var combineURLs = __webpack_require__(306);
+	var defaults = __webpack_require__(285);
+	var utils = __webpack_require__(282);
+	var InterceptorManager = __webpack_require__(296);
+	var dispatchRequest = __webpack_require__(297);
+	var isAbsoluteURL = __webpack_require__(300);
+	var combineURLs = __webpack_require__(301);
 	
 	/**
 	 * Create a new instance of Axios
@@ -30397,13 +30323,13 @@
 
 
 /***/ },
-/* 290 */
+/* 285 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 	
-	var utils = __webpack_require__(287);
-	var normalizeHeaderName = __webpack_require__(291);
+	var utils = __webpack_require__(282);
+	var normalizeHeaderName = __webpack_require__(286);
 	
 	var PROTECTION_PREFIX = /^\)\]\}',?\n/;
 	var DEFAULT_CONTENT_TYPE = {
@@ -30420,10 +30346,10 @@
 	  var adapter;
 	  if (typeof XMLHttpRequest !== 'undefined') {
 	    // For browsers use XHR adapter
-	    adapter = __webpack_require__(292);
+	    adapter = __webpack_require__(287);
 	  } else if (typeof process !== 'undefined') {
 	    // For node use HTTP adapter
-	    adapter = __webpack_require__(292);
+	    adapter = __webpack_require__(287);
 	  }
 	  return adapter;
 	}
@@ -30497,12 +30423,12 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 291 */
+/* 286 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(287);
+	var utils = __webpack_require__(282);
 	
 	module.exports = function normalizeHeaderName(headers, normalizedName) {
 	  utils.forEach(headers, function processHeader(value, name) {
@@ -30515,18 +30441,18 @@
 
 
 /***/ },
-/* 292 */
+/* 287 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 	
-	var utils = __webpack_require__(287);
-	var settle = __webpack_require__(293);
-	var buildURL = __webpack_require__(296);
-	var parseHeaders = __webpack_require__(297);
-	var isURLSameOrigin = __webpack_require__(298);
-	var createError = __webpack_require__(294);
-	var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(299);
+	var utils = __webpack_require__(282);
+	var settle = __webpack_require__(288);
+	var buildURL = __webpack_require__(291);
+	var parseHeaders = __webpack_require__(292);
+	var isURLSameOrigin = __webpack_require__(293);
+	var createError = __webpack_require__(289);
+	var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(294);
 	
 	module.exports = function xhrAdapter(config) {
 	  return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -30622,7 +30548,7 @@
 	    // This is only done if running in a standard browser environment.
 	    // Specifically not if we're in a web worker, or react-native.
 	    if (utils.isStandardBrowserEnv()) {
-	      var cookies = __webpack_require__(300);
+	      var cookies = __webpack_require__(295);
 	
 	      // Add xsrf header
 	      var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
@@ -30699,12 +30625,12 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 293 */
+/* 288 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var createError = __webpack_require__(294);
+	var createError = __webpack_require__(289);
 	
 	/**
 	 * Resolve or reject a Promise based on response status.
@@ -30730,12 +30656,12 @@
 
 
 /***/ },
-/* 294 */
+/* 289 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var enhanceError = __webpack_require__(295);
+	var enhanceError = __webpack_require__(290);
 	
 	/**
 	 * Create an Error with the specified message, config, error code, and response.
@@ -30753,7 +30679,7 @@
 
 
 /***/ },
-/* 295 */
+/* 290 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -30778,12 +30704,12 @@
 
 
 /***/ },
-/* 296 */
+/* 291 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(287);
+	var utils = __webpack_require__(282);
 	
 	function encode(val) {
 	  return encodeURIComponent(val).
@@ -30852,12 +30778,12 @@
 
 
 /***/ },
-/* 297 */
+/* 292 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(287);
+	var utils = __webpack_require__(282);
 	
 	/**
 	 * Parse headers into an object
@@ -30895,12 +30821,12 @@
 
 
 /***/ },
-/* 298 */
+/* 293 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(287);
+	var utils = __webpack_require__(282);
 	
 	module.exports = (
 	  utils.isStandardBrowserEnv() ?
@@ -30969,7 +30895,7 @@
 
 
 /***/ },
-/* 299 */
+/* 294 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -31011,12 +30937,12 @@
 
 
 /***/ },
-/* 300 */
+/* 295 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(287);
+	var utils = __webpack_require__(282);
 	
 	module.exports = (
 	  utils.isStandardBrowserEnv() ?
@@ -31070,12 +30996,12 @@
 
 
 /***/ },
-/* 301 */
+/* 296 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(287);
+	var utils = __webpack_require__(282);
 	
 	function InterceptorManager() {
 	  this.handlers = [];
@@ -31128,15 +31054,15 @@
 
 
 /***/ },
-/* 302 */
+/* 297 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(287);
-	var transformData = __webpack_require__(303);
-	var isCancel = __webpack_require__(304);
-	var defaults = __webpack_require__(290);
+	var utils = __webpack_require__(282);
+	var transformData = __webpack_require__(298);
+	var isCancel = __webpack_require__(299);
+	var defaults = __webpack_require__(285);
 	
 	/**
 	 * Throws a `Cancel` if cancellation has been requested.
@@ -31213,12 +31139,12 @@
 
 
 /***/ },
-/* 303 */
+/* 298 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(287);
+	var utils = __webpack_require__(282);
 	
 	/**
 	 * Transform the data for a request or a response
@@ -31239,7 +31165,7 @@
 
 
 /***/ },
-/* 304 */
+/* 299 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -31250,7 +31176,7 @@
 
 
 /***/ },
-/* 305 */
+/* 300 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -31270,7 +31196,7 @@
 
 
 /***/ },
-/* 306 */
+/* 301 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -31288,7 +31214,7 @@
 
 
 /***/ },
-/* 307 */
+/* 302 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -31313,12 +31239,12 @@
 
 
 /***/ },
-/* 308 */
+/* 303 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Cancel = __webpack_require__(307);
+	var Cancel = __webpack_require__(302);
 	
 	/**
 	 * A `CancelToken` is an object that can be used to request cancellation of an operation.
@@ -31376,7 +31302,7 @@
 
 
 /***/ },
-/* 309 */
+/* 304 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -31407,6 +31333,341 @@
 	  };
 	};
 
+
+/***/ },
+/* 305 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	exports.default = function (props) {
+	  return _react2.default.createElement(
+	    "div",
+	    { id: "main", className: "container-fluid" },
+	    _react2.default.createElement(
+	      "h1",
+	      null,
+	      "Astoot Commute"
+	    ),
+	    _react2.default.createElement(
+	      "div",
+	      { className: "col-xs-12" },
+	      props.children && _react2.default.cloneElement(props.children, props)
+	    )
+	  );
+	};
+
+/***/ },
+/* 306 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _Routes = __webpack_require__(307);
+	
+	var _Routes2 = _interopRequireDefault(_Routes);
+	
+	var _reactRedux = __webpack_require__(241);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function mapStateToProps(state, ownProps) {
+	  console.log(state);
+	  return {
+	    routes: state.routes
+	
+	  };
+	}
+	
+	function mapDispatchToProps(dispatch, ownProps) {
+	
+	  return {};
+	}
+	
+	var RoutesContainer = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_Routes2.default);
+	
+	exports.default = RoutesContainer;
+
+/***/ },
+/* 307 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRouter = __webpack_require__(178);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	exports.default = function (props) {
+	  var routes = props.routes;
+	
+	  return _react2.default.createElement(
+	    'div',
+	    null,
+	    routes && routes.map(function (route) {
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'col-xs-12 col-sm-6 col-md-4', key: route.rt },
+	        _react2.default.createElement(
+	          _reactRouter.Link,
+	          { to: '/routes/' + route.rt },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'list-group-item', key: route.rt },
+	            _react2.default.createElement(
+	              'h5',
+	              null,
+	              _react2.default.createElement(
+	                'span',
+	                null,
+	                route.rt
+	              ),
+	              '  ',
+	              _react2.default.createElement(
+	                'span',
+	                null,
+	                route.rtnm
+	              )
+	            )
+	          )
+	        )
+	      );
+	    })
+	  );
+	};
+
+/***/ },
+/* 308 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _FilterInput = __webpack_require__(309);
+	
+	var _FilterInput2 = _interopRequireDefault(_FilterInput);
+	
+	var _Routes = __webpack_require__(307);
+	
+	var _Routes2 = _interopRequireDefault(_Routes);
+	
+	var _store = __webpack_require__(269);
+	
+	var _store2 = _interopRequireDefault(_store);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var FilterableRoutesContainer = function (_React$Component) {
+	  _inherits(FilterableRoutesContainer, _React$Component);
+	
+	  function FilterableRoutesContainer() {
+	    _classCallCheck(this, FilterableRoutesContainer);
+	
+	    var _this = _possibleConstructorReturn(this, (FilterableRoutesContainer.__proto__ || Object.getPrototypeOf(FilterableRoutesContainer)).call(this));
+	
+	    _this.state = Object.assign({
+	      inputValue: ''
+	    }, _store2.default.getState());
+	
+	    _this.handleChange = _this.handleChange.bind(_this);
+	
+	    return _this;
+	  }
+	
+	  _createClass(FilterableRoutesContainer, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var _this2 = this;
+	
+	      this.unsubscribe = _store2.default.subscribe(function () {
+	        _this2.setState(_store2.default.getState());
+	      });
+	    }
+	  }, {
+	    key: 'componentWillUnmount',
+	    value: function componentWillUnmount() {
+	      this.unsubscribe();
+	    }
+	  }, {
+	    key: 'handleChange',
+	    value: function handleChange(evt) {
+	      this.setState({
+	        inputValue: evt.target.value
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var inputValue = this.state.inputValue;
+	      var filteredRoutes = this.state.routes.filter(function (route) {
+	        return route.rtnm.toLowerCase().match(inputValue.toLowerCase()) || route.rt.match(inputValue);
+	      });
+	
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(_FilterInput2.default, {
+	          handleChange: this.handleChange,
+	          inputValue: inputValue
+	        }),
+	        _react2.default.createElement(_Routes2.default, { routes: filteredRoutes })
+	      );
+	    }
+	  }]);
+	
+	  return FilterableRoutesContainer;
+	}(_react2.default.Component);
+	
+	exports.default = FilterableRoutesContainer;
+
+/***/ },
+/* 309 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var FilterInput = function FilterInput(props) {
+	
+	  var handleChange = props.handleChange;
+	  var inputValue = props.inputValue;
+	
+	  return _react2.default.createElement(
+	    'form',
+	    { className: 'form-group' },
+	    _react2.default.createElement('input', {
+	      onChange: handleChange,
+	      value: inputValue,
+	      className: 'form-control',
+	      placeholder: 'Filter by route name or number'
+	    })
+	  );
+	};
+	
+	exports.default = FilterInput;
+
+/***/ },
+/* 310 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _Route = __webpack_require__(311);
+	
+	var _Route2 = _interopRequireDefault(_Route);
+	
+	var _reactRedux = __webpack_require__(241);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function mapStateToProps(state, ownProps) {
+	  console.log('state', state);
+	  return {
+	    selectedRoute: state.selectedRoute
+	  };
+	}
+	
+	function mapDispatchToProps(dispatch, ownProps) {
+	
+	  return {};
+	}
+	
+	var RouteContainer = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_Route2.default);
+	
+	exports.default = RouteContainer;
+
+/***/ },
+/* 311 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRouter = __webpack_require__(178);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	exports.default = function (props) {
+	  var selectedRoute = props.selectedRoute;
+	  console.log("route props", props);
+	
+	  return _react2.default.createElement(
+	    'div',
+	    null,
+	    _react2.default.createElement(
+	      'h1',
+	      null,
+	      _react2.default.createElement(
+	        'span',
+	        null,
+	        selectedRoute.routeId
+	      ),
+	      '  ',
+	      _react2.default.createElement(
+	        'span',
+	        null,
+	        selectedRoute.rtnm
+	      )
+	    )
+	  );
+	};
 
 /***/ }
 /******/ ]);
