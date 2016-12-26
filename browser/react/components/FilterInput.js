@@ -11,7 +11,7 @@ const FilterInput = (props) => {
         onChange={handleChange}
         value={inputValue}
         className='form-control'
-        placeholder="Filter by route name or number"
+        placeholder="Filter results"
       />
     </form>
   )

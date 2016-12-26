@@ -2,7 +2,6 @@ import Route from '../components/Route';
 import {connect} from 'react-redux';
 
 function mapStateToProps(state, ownProps) {
-  console.log('state', state);
   return {
     selectedRoute: state.selectedRoute
   }

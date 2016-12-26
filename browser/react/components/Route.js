@@ -3,12 +3,20 @@ import {Link} from 'react-router';
 
 export default (props) => {
   const selectedRoute = props.selectedRoute;
-  console.log("route props",props);
+  const directions = selectedRoute.directions;
 
   return (
     <div>
-      <h1><span>{selectedRoute.routeId}</span>  <span>{selectedRoute.rtnm}</span></h1>
+      <h1><span>{selectedRoute.routeNumber}</span>  <span>{selectedRoute.name}</span></h1>
+      {
+        directions && directions.map(direction => (
 
+      <Link className="btn btn-primary" key={direction} to={`/routes/${selectedRoute.routeNumber}/${direction}`}>
+        <span>{direction}</span>
+      </Link>
+
+        ))
+      }
     </div>
   )
 }

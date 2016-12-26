@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const router = require('./routes/cta');
+const startDb = require('./db');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const PORT = 1337;
@@ -26,13 +27,17 @@ app.use(function (err, req, res, next) {
 });
 
 // create server
-const server = app.listen(PORT, function () {
-	console.log(`listening on port ${PORT}`);
+// const server =
+
+startDb.then(() => {
+  app.listen(PORT, function () {
+    console.log(`listening on port ${PORT}`);
+  });
 });
 
 // set up sockets
-const io = require('socket.io').listen(server);
+// const io = require('socket.io').listen(server);
 
-io.sockets.on('connection', function (socket) {
-  console.log('connected to socket');
-});
+// io.sockets.on('connection', function (socket) {
+//   console.log('connected to socket');
+// });
