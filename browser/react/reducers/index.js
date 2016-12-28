@@ -1,7 +1,8 @@
 import {
   RECEIVE_BUS_ROUTES,
   RECEIVE_BUS_ROUTE,
-  RECEIVE_BUS_STOPS
+  RECEIVE_BUS_STOPS,
+  RECEIVE_ARRIVALS
 } from '../constants';
 
 const initialState = {
@@ -28,6 +29,10 @@ export default function (state = initialState, action) {
     case RECEIVE_BUS_STOPS:
       newState.stops = action.stops;
       newState.direction = action.direction;
+      break;
+
+    case RECEIVE_ARRIVALS:
+      newState.arrivalsObj = action.arrivalsObj;
       break;
 
     default:

@@ -68,19 +68,23 @@
 	
 	var _App2 = _interopRequireDefault(_App);
 	
+	var _Arrivals = __webpack_require__(314);
+	
+	var _Arrivals2 = _interopRequireDefault(_Arrivals);
+	
 	var _RoutesContainer = __webpack_require__(306);
 	
 	var _RoutesContainer2 = _interopRequireDefault(_RoutesContainer);
 	
-	var _FilterableStopsContainer = __webpack_require__(314);
+	var _FilterableStopsContainer = __webpack_require__(308);
 	
 	var _FilterableStopsContainer2 = _interopRequireDefault(_FilterableStopsContainer);
 	
-	var _RouteContainer = __webpack_require__(310);
+	var _RouteContainer = __webpack_require__(311);
 	
 	var _RouteContainer2 = _interopRequireDefault(_RouteContainer);
 	
-	var _FilterableRoutesContainer = __webpack_require__(312);
+	var _FilterableRoutesContainer = __webpack_require__(313);
 	
 	var _FilterableRoutesContainer2 = _interopRequireDefault(_FilterableRoutesContainer);
 	
@@ -101,6 +105,12 @@
 	  _store2.default.dispatch((0, _ctaActionCreators.loadStops)(routeId, direction));
 	};
 	
+	var onArrivalsEnter = function onArrivalsEnter(nextRouterState) {
+	  var stopId = nextRouterState.params.stopId;
+	  var routeId = nextRouterState.params.routeId;
+	  _store2.default.dispatch((0, _ctaActionCreators.loadArrivals)(routeId, stopId));
+	};
+	
 	_reactDom2.default.render(_react2.default.createElement(
 	  _reactRedux.Provider,
 	  { store: _store2.default },
@@ -113,10 +123,29 @@
 	      _react2.default.createElement(_reactRouter.IndexRoute, { component: _FilterableRoutesContainer2.default }),
 	      _react2.default.createElement(_reactRouter.Route, { path: '/routes', component: _FilterableRoutesContainer2.default }),
 	      _react2.default.createElement(_reactRouter.Route, { path: '/routes/:routeId', component: _RouteContainer2.default, onEnter: onSelectedRouteEnter }),
-	      _react2.default.createElement(_reactRouter.Route, { path: '/routes/:routeId/:direction', component: _FilterableStopsContainer2.default, onEnter: onStopsEnter })
+	      _react2.default.createElement(_reactRouter.Route, { path: '/routes/:routeId/:direction', component: _FilterableStopsContainer2.default, onEnter: onStopsEnter }),
+	      _react2.default.createElement(_reactRouter.Route, { path: '/arrivals/:routeId/:direction/:stopId', component: _Arrivals2.default })
 	    )
 	  )
 	), document.getElementById('app'));
+	
+	// ReactDOM.render(
+	//   <Provider store={store}>
+	//     <Router history={hashHistory}>
+	//       <Route path="/" component={App} onEnter={onAppEnter}>
+	//         <IndexRoute component={FilterableRoutesContainer} />
+	//         <Route path="/routes" component={FilterableRoutesContainer}>
+	//           <Route path="/routes/:routeId" component={RouteContainer} onEnter={onSelectedRouteEnter}>
+	//             <Route path="/routes/:routeId/:direction" component={FilterableStopsContainer} onEnter={onStopsEnter}>
+	//               <Route path="/routes/:routeId/:direction/arrivals" component={Arrivals} onEnter={onArrivalsEnter} />
+	//             </Route>
+	//           </Route>
+	//         </Route>
+	//       </Route>
+	//     </Router>
+	//   </Provider>,
+	//   document.getElementById('app')
+	// );
 
 /***/ },
 /* 1 */
@@ -28871,6 +28900,10 @@
 	      newState.direction = action.direction;
 	      break;
 	
+	    case _constants.RECEIVE_ARRIVALS:
+	      newState.arrivalsObj = action.arrivalsObj;
+	      break;
+	
 	    default:
 	      return state;
 	
@@ -28902,6 +28935,8 @@
 	var RECEIVE_BUS_ROUTE = exports.RECEIVE_BUS_ROUTE = 'RECEIVE_BUS_ROUTE';
 	
 	var RECEIVE_BUS_STOPS = exports.RECEIVE_BUS_STOPS = 'RECEIVE_BUS_STOPS';
+	
+	var RECEIVE_ARRIVALS = exports.RECEIVE_ARRIVALS = 'RECEIVE_ARRIVALS';
 
 /***/ },
 /* 272 */
@@ -29799,7 +29834,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.loadStops = exports.loadSelectedRoute = exports.loadAllRoutes = exports.receiveStops = exports.receieveSelectedRoute = exports.receiveRoutes = undefined;
+	exports.loadArrivals = exports.loadStops = exports.loadSelectedRoute = exports.loadAllRoutes = exports.receiveArrivals = exports.receiveStops = exports.receieveSelectedRoute = exports.receiveRoutes = undefined;
 	
 	var _axios = __webpack_require__(280);
 	
@@ -29831,15 +29866,18 @@
 	  };
 	};
 	
+	var receiveArrivals = exports.receiveArrivals = function receiveArrivals(arrivalsObj) {
+	  return {
+	    type: _constants.RECEIVE_ARRIVALS,
+	    arrivalsObj: arrivalsObj
+	  };
+	};
+	
 	var loadAllRoutes = exports.loadAllRoutes = function loadAllRoutes() {
 	  return function (dispatch) {
-	    // if (cachedRoutes.length) {
-	    //   return dispatch(receiveRoutes(cachedRoutes));
-	    // }
 	    _axios2.default.get('/api/routes').then(function (res) {
 	      return res.data;
 	    }).then(function (routes) {
-	      // cachedRoutes = routes;
 	      return dispatch(receiveRoutes(routes));
 	    }).catch(function (err) {
 	      console.error(err);
@@ -29871,64 +29909,17 @@
 	  };
 	};
 	
-	// const getRouteWithDirections = routeId => {
-	//   const promiseForAllRoutes = axios.get(`/api/routes/${routeId}`)
-	//   const promiseForDirArray = axios.get(`/api/routes/${routeId}`)
-	//   if (cachedRoutes.length) {
-	//     return promiseForDirArray
-	//     .then(res => res.data.directions)
-	//     .then(dirObj => {
-	//       return filterRoutes(cachedRoutes, dirObj, routeId);
-	//     });
-	//   } else {
-	//     return Promise.all([promiseForAllRoutes, promiseForDirArray])
-	//     .then(result => {
-	//       const allRoutes = result[0].data;
-	//       const dirObj = result[1].data.directions;
-	//       return filterRoutes(allRoutes, dirObj, routeId);
-	//     });
-	//   }
-	// }
-	
-	// const filterRoutes = (routesArr, dirObj, routeId) => {
-	//   const newRoute = routesArr.filter(dirObj => {
-	//     return dirObj.rt === routeId;
-	//   })[0];
-	//   newRoute.directions = dirObj;
-	//   return newRoute;
-	// }
-	
-	// const addSetsOfStops = (route, dispatch) => {
-	//   const dir1 = axios.get(`/api/routes/${route.rt}/${route.directions[0].dir}`);
-	//   const dir2 = axios.get(`/api/routes/${route.rt}/${route.directions[1].dir}`);
-	//   return Promise.all([dir1, dir2])
-	//   .then(setsOfStops => {
-	//     route.directions[0].stops = setsOfStops[0].data['bustime-response'].stops;
-	//     route.directions[1].stops = setsOfStops[1].data['bustime-response'].stops;
-	//     dispatch(receieveSelectedRoute(route));
-	//   })
-	//   .catch(err => {
-	//     console.error(err);
-	//   });
-	// }
-	
-	// export const loadStops = (routeId, direction) => {
-	//   return (dispatch) => {
-	//     axios.get(`/api/routes/${routeId}/${direction}`)
-	//     .then(res => res.data['bustime-response'].stops)
-	//     .then(stops => {
-	//       const newRoute = cachedRoutes.filter(route => {
-	//         return route.rt === routeId;
-	//       })[0];
-	//       newRoute.stops = stops;
-	//       return newRoute;
-	//     })
-	//     .then(routeWithStops => dispatch(receiveStops(routeWithStops)))
-	//     .catch(err => {
-	//       console.error(err.stack);
-	//     });
-	//   }
-	// }
+	var loadArrivals = exports.loadArrivals = function loadArrivals(routeId, stopId) {
+	  return function (dispatch) {
+	    _axios2.default.get('/api/arrivals/' + routeId + '/' + stopId).then(function (res) {
+	      return res.data['bustime-response'];
+	    }).then(function (arrivalsObj) {
+	      return dispatch(receiveArrivals(arrivalsObj));
+	    }).catch(function (err) {
+	      console.error(err.stack);
+	    });
+	  };
+	};
 
 /***/ },
 /* 280 */
@@ -31546,8 +31537,166 @@
 	};
 
 /***/ },
-/* 308 */,
+/* 308 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _FilterInput = __webpack_require__(309);
+	
+	var _FilterInput2 = _interopRequireDefault(_FilterInput);
+	
+	var _Stops = __webpack_require__(310);
+	
+	var _Stops2 = _interopRequireDefault(_Stops);
+	
+	var _store = __webpack_require__(269);
+	
+	var _store2 = _interopRequireDefault(_store);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var FilterableStopsContainer = function (_React$Component) {
+	  _inherits(FilterableStopsContainer, _React$Component);
+	
+	  function FilterableStopsContainer(props) {
+	    _classCallCheck(this, FilterableStopsContainer);
+	
+	    var _this = _possibleConstructorReturn(this, (FilterableStopsContainer.__proto__ || Object.getPrototypeOf(FilterableStopsContainer)).call(this, props));
+	
+	    _this.state = Object.assign({
+	      inputValue: ''
+	    }, _store2.default.getState());
+	
+	    _this.handleChange = _this.handleChange.bind(_this);
+	    return _this;
+	  }
+	
+	  _createClass(FilterableStopsContainer, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var _this2 = this;
+	
+	      this.unsubscribe = _store2.default.subscribe(function () {
+	        _this2.setState(_store2.default.getState());
+	      });
+	    }
+	  }, {
+	    key: 'componentWillUnmount',
+	    value: function componentWillUnmount() {
+	      this.unsubscribe();
+	    }
+	  }, {
+	    key: 'handleChange',
+	    value: function handleChange(evt) {
+	      this.setState({
+	        inputValue: evt.target.value
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var inputValue = this.state.inputValue;
+	      var route = this.state.selectedRoute;
+	      var direction = this.state.direction;
+	      var filteredStops = this.state.stops.filter(function (stop) {
+	        return stop.name.toLowerCase().match(inputValue.toLowerCase());
+	      });
+	
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'h1',
+	          null,
+	          _react2.default.createElement(
+	            'span',
+	            null,
+	            route.routeNumber
+	          ),
+	          '  ',
+	          _react2.default.createElement(
+	            'span',
+	            null,
+	            route.name
+	          ),
+	          '  ',
+	          _react2.default.createElement(
+	            'span',
+	            null,
+	            direction
+	          )
+	        ),
+	        _react2.default.createElement(_FilterInput2.default, {
+	          handleChange: this.handleChange,
+	          inputValue: inputValue
+	        }),
+	        _react2.default.createElement(_Stops2.default, {
+	          stops: filteredStops,
+	          direction: this.state.direction,
+	          selectedRoute: this.state.selectedRoute })
+	      );
+	    }
+	  }]);
+	
+	  return FilterableStopsContainer;
+	}(_react2.default.Component);
+	
+	exports.default = FilterableStopsContainer;
+
+/***/ },
 /* 309 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var FilterInput = function FilterInput(props) {
+	
+	  var handleChange = props.handleChange;
+	  var inputValue = props.inputValue;
+	
+	  return _react2.default.createElement(
+	    'form',
+	    { className: 'form-group' },
+	    _react2.default.createElement('input', {
+	      onChange: handleChange,
+	      value: inputValue,
+	      className: 'form-control',
+	      placeholder: 'Filter results'
+	    })
+	  );
+	};
+	
+	exports.default = FilterInput;
+
+/***/ },
+/* 310 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31586,7 +31735,7 @@
 	        { className: 'col-xs-12 col-sm-6 col-md-4', key: stop.id },
 	        _react2.default.createElement(
 	          _reactRouter.Link,
-	          { to: '/routes/' + route.routeNumber + '/' + direction },
+	          { to: '/arrivals/' + route.routeNumber + '/' + direction + '/' + stop.stopId },
 	          _react2.default.createElement(
 	            'div',
 	            { className: 'list-group-item' },
@@ -31607,7 +31756,7 @@
 	};
 
 /***/ },
-/* 310 */
+/* 311 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31616,7 +31765,7 @@
 	  value: true
 	});
 	
-	var _Route = __webpack_require__(311);
+	var _Route = __webpack_require__(312);
 	
 	var _Route2 = _interopRequireDefault(_Route);
 	
@@ -31640,7 +31789,7 @@
 	exports.default = RouteContainer;
 
 /***/ },
-/* 311 */
+/* 312 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31694,7 +31843,7 @@
 	};
 
 /***/ },
-/* 312 */
+/* 313 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31709,7 +31858,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _FilterInput = __webpack_require__(313);
+	var _FilterInput = __webpack_require__(309);
 	
 	var _FilterInput2 = _interopRequireDefault(_FilterInput);
 	
@@ -31793,41 +31942,6 @@
 	exports.default = FilterableRoutesContainer;
 
 /***/ },
-/* 313 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _react = __webpack_require__(1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var FilterInput = function FilterInput(props) {
-	
-	  var handleChange = props.handleChange;
-	  var inputValue = props.inputValue;
-	
-	  return _react2.default.createElement(
-	    'form',
-	    { className: 'form-group' },
-	    _react2.default.createElement('input', {
-	      onChange: handleChange,
-	      value: inputValue,
-	      className: 'form-control',
-	      placeholder: 'Filter results'
-	    })
-	  );
-	};
-	
-	exports.default = FilterInput;
-
-/***/ },
 /* 314 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -31843,17 +31957,13 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _FilterInput = __webpack_require__(313);
-	
-	var _FilterInput2 = _interopRequireDefault(_FilterInput);
-	
-	var _Stops = __webpack_require__(309);
-	
-	var _Stops2 = _interopRequireDefault(_Stops);
-	
 	var _store = __webpack_require__(269);
 	
 	var _store2 = _interopRequireDefault(_store);
+	
+	var _axios = __webpack_require__(280);
+	
+	var _axios2 = _interopRequireDefault(_axios);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -31863,23 +31973,22 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FilterableStopsContainer = function (_React$Component) {
-	  _inherits(FilterableStopsContainer, _React$Component);
+	var Arrivals = function (_React$Component) {
+	  _inherits(Arrivals, _React$Component);
 	
-	  function FilterableStopsContainer(props) {
-	    _classCallCheck(this, FilterableStopsContainer);
+	  function Arrivals(props) {
+	    _classCallCheck(this, Arrivals);
 	
-	    var _this = _possibleConstructorReturn(this, (FilterableStopsContainer.__proto__ || Object.getPrototypeOf(FilterableStopsContainer)).call(this, props));
+	    var _this = _possibleConstructorReturn(this, (Arrivals.__proto__ || Object.getPrototypeOf(Arrivals)).call(this, props));
 	
 	    _this.state = Object.assign({
-	      inputValue: ''
+	      arrivals: [],
+	      errorMsg: ''
 	    }, _store2.default.getState());
-	
-	    _this.handleChange = _this.handleChange.bind(_this);
 	    return _this;
 	  }
 	
-	  _createClass(FilterableStopsContainer, [{
+	  _createClass(Arrivals, [{
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      var _this2 = this;
@@ -31887,29 +31996,50 @@
 	      this.unsubscribe = _store2.default.subscribe(function () {
 	        _this2.setState(_store2.default.getState());
 	      });
+	      var routeId = this.props.params.routeId;
+	      var stopId = this.props.params.stopId;
+	      this.getArrivals(routeId, stopId);
+	      this.timerId = setInterval(function () {
+	        return _this2.getArrivals(routeId, stopId);
+	      }, 1000 * 30);
 	    }
 	  }, {
 	    key: 'componentWillUnmount',
 	    value: function componentWillUnmount() {
 	      this.unsubscribe();
+	      clearInterval(this.timerId);
 	    }
 	  }, {
-	    key: 'handleChange',
-	    value: function handleChange(evt) {
-	      this.setState({
-	        inputValue: evt.target.value
+	    key: 'getArrivals',
+	    value: function getArrivals(routeId, stopId) {
+	      var _this3 = this;
+	
+	      _axios2.default.get('/api/arrivals/' + routeId + '/' + stopId).then(function (res) {
+	        return res.data['bustime-response'];
+	      }).then(function (arrivalsObj) {
+	        console.log(arrivalsObj);
+	        var arrivals = void 0,
+	            errorMsg = void 0;
+	        if (arrivalsObj.prd) arrivals = arrivalsObj.prd;
+	        if (arrivalsObj.error) errorMsg = arrivalsObj.error.map(function (err) {
+	          return err.msg;
+	        }).join(', ');
+	        _this3.setState({
+	          arrivals: arrivals || [],
+	          errorMsg: errorMsg || ''
+	        });
+	      }).catch(function (err) {
+	        console.error(err.stack);
 	      });
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      console.log(this.state);
-	      var inputValue = this.state.inputValue;
-	      var route = this.state.selectedRoute;
-	      var direction = this.state.direction;
-	      var filteredStops = this.state.stops.filter(function (stop) {
-	        return stop.name.toLowerCase().match(inputValue.toLowerCase());
-	      });
+	      var arrivals = this.state.arrivals;
+	      var errorMsg = this.state.errorMsg;
+	      var routeNumber = this.props.params.routeId;
+	      var direction = this.props.params.direction;
+	      var upcomingArrivals = 'Route ' + routeNumber + ' ' + direction + ' arriving in: ';
 	
 	      return _react2.default.createElement(
 	        'div',
@@ -31920,37 +32050,37 @@
 	          _react2.default.createElement(
 	            'span',
 	            null,
-	            route.routeNumber
-	          ),
-	          '  ',
-	          _react2.default.createElement(
-	            'span',
-	            null,
-	            route.name
-	          ),
-	          '  ',
-	          _react2.default.createElement(
-	            'span',
-	            null,
-	            direction
+	            arrivals.length ? upcomingArrivals : errorMsg
 	          )
 	        ),
-	        _react2.default.createElement(_FilterInput2.default, {
-	          handleChange: this.handleChange,
-	          inputValue: inputValue
-	        }),
-	        _react2.default.createElement(_Stops2.default, {
-	          stops: filteredStops,
-	          direction: this.state.direction,
-	          selectedRoute: this.state.selectedRoute })
+	        arrivals.length && arrivals.map(function (arrival) {
+	          return _react2.default.createElement(
+	            'div',
+	            { className: 'col-xs-12 col-sm-6 col-md-4', key: arrival.vid },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'list-group-item' },
+	              _react2.default.createElement(
+	                'h2',
+	                null,
+	                _react2.default.createElement(
+	                  'span',
+	                  null,
+	                  arrival.prdctdn,
+	                  ' minutes'
+	                )
+	              )
+	            )
+	          );
+	        })
 	      );
 	    }
 	  }]);
 	
-	  return FilterableStopsContainer;
+	  return Arrivals;
 	}(_react2.default.Component);
 	
-	exports.default = FilterableStopsContainer;
+	exports.default = Arrivals;
 
 /***/ }
 /******/ ]);

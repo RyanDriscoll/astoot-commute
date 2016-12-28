@@ -1,10 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const axios = require('axios');
-
-// const ApiKey = require('../secret');
-// const ctaApiPrefix = 'http://www.ctabustracker.com/bustime/api/v2/';
-// const format = '&format=json';
+const ApiKey = require('../secret');
+const ctaApiPrefix = 'http://www.ctabustracker.com/bustime/api/v2/';
+const format = '&format=json';
 
 const Route = require('../db/models/route');
 const Stops = require('../db/models/stop');
@@ -15,25 +14,6 @@ module.exports = router;
 router.get('/routes', (req, res, next) => {
   Route.findAll()
   .then(routes => res.json(routes))
-
-  // axios.get(`${ctaApiPrefix}getroutes?key=${ApiKey}${format}`)
-  // .then(response => response.data['bustime-response'].routes)
-  // .then(routes => {
-  //   routes.forEach(route => {
-  //     axios.get(`${ctaApiPrefix}getdirections?key=${ApiKey}&rt=${route.rt}${format}`)
-  //     .then(response => response.data['bustime-response'].directions)
-  //     .then(dirArray => {
-  //       let newRoute = {name: route.rtnm,
-  //         routeNumber: route.rt,
-  //         color: route.rtclr,
-  //         directions: [dirArray[0].dir, dirArray[1].dir]};
-  //       console.log(dirArray, newRoute.directions);
-  //       return newRoute;
-  //     })
-  //     .then(rt => Route.create(rt))
-  //     .catch(next);
-  //   });
-  // })
   .catch(next);
 });
 
@@ -48,17 +28,6 @@ router.get('/routes/:route', (req, res, next) => {
   .catch(next);
 });
 
-// get selected route with directions
-// router.get('/routes/:route', (req, res, next) => {
-//   axios.get(`${ctaApiPrefix}getdirections?key=${ApiKey}&rt=${req.params.route}${format}`)
-//   .then(response => {
-//     console.log("!!!!",response.data['bustime-response']);
-//     return response.data['bustime-response'];
-//   })
-//   .then(directions => res.send(directions))
-//   .catch(next);
-// });
-
 // get stops
 router.get('/routes/:route/:direction', (req, res, next) => {
   Stops.findAll({
@@ -68,17 +37,14 @@ router.get('/routes/:route/:direction', (req, res, next) => {
     }
   })
   .then(stops => res.json(stops))
-  // axios.get(`${ctaApiPrefix}getstops?key=${ApiKey}&rt=${req.params.route}&dir=${req.params.direction}${format}`)
-  // .then(response => response.data)
-  // .then(stops => res.send(stops))
   .catch(next);
 });
 
 // get arrival predictions
-router.get('/routes/:route/:direction/:stops/:arrivals', (req, res, next) => {
-  axios.get(`${ctaApiPrefix}getpredictions?key=${ApiKey}&stpid=${req.params.arrivals}${format}`)
+router.get('/arrivals/:routeId/:stopId', (req, res, next) => {
+  axios.get(`${ctaApiPrefix}getpredictions?key=${ApiKey}&rt=${req.params.routeId}&stpid=${req.params.stopId}${format}`)
   .then(response => response.data)
-  .then(arrivals => res.send(arrivals))
+  .then(arrivals => res.json(arrivals))
   .catch(next);
 });
 

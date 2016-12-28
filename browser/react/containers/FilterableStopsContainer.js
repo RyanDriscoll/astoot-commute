@@ -34,7 +34,6 @@ class FilterableStopsContainer extends React.Component {
   }
 
   render() {
-    console.log(this.state)
     const inputValue = this.state.inputValue;
     const route = this.state.selectedRoute;
     const direction = this.state.direction;
