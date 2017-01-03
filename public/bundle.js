@@ -32035,6 +32035,7 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
+	      console.log('props', this.props, 'state', this.state);
 	      var arrivals = this.state.arrivals;
 	      var errorMsg = this.state.errorMsg;
 	      var routeNumber = this.props.params.routeId;
@@ -32050,7 +32051,7 @@
 	          _react2.default.createElement(
 	            'span',
 	            null,
-	            arrivals.length ? upcomingArrivals : errorMsg
+	            !!arrivals.length ? upcomingArrivals : errorMsg
 	          )
 	        ),
 	        arrivals.length && arrivals.map(function (arrival) {

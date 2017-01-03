@@ -49,6 +49,7 @@ class Arrivals extends React.Component {
   }
 
   render() {
+    console.log('props', this.props, 'state', this.state)
     const arrivals = this.state.arrivals;
     const errorMsg = this.state.errorMsg;
     const routeNumber = this.props.params.routeId;
@@ -57,7 +58,7 @@ class Arrivals extends React.Component {
 
     return (
       <div>
-        <h1><span>{arrivals.length? upcomingArrivals : errorMsg}</span></h1>
+        <h1><span>{!!arrivals.length? upcomingArrivals : errorMsg}</span></h1>
         {
           arrivals.length && arrivals.map(arrival => (
             <div className="col-xs-12 col-sm-6 col-md-4" key={arrival.vid}>
