@@ -31414,7 +31414,7 @@
 /* 305 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -31424,20 +31424,20 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
+	var _Navbar = __webpack_require__(316);
+	
+	var _Navbar2 = _interopRequireDefault(_Navbar);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	exports.default = function (props) {
 	  return _react2.default.createElement(
-	    "div",
-	    { id: "main", className: "container-fluid" },
+	    'div',
+	    { id: 'main', className: 'container-fluid' },
+	    _react2.default.createElement(_Navbar2.default, null),
 	    _react2.default.createElement(
-	      "h1",
-	      null,
-	      "Astoot Commute"
-	    ),
-	    _react2.default.createElement(
-	      "div",
-	      { className: "col-xs-12" },
+	      'div',
+	      { className: 'col-xs-12 app' },
 	      props.children && _react2.default.cloneElement(props.children, props)
 	    )
 	  );
@@ -32082,6 +32082,95 @@
 	}(_react2.default.Component);
 	
 	exports.default = Arrivals;
+
+/***/ },
+/* 315 */,
+/* 316 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	exports.default = function (props) {
+	  return _react2.default.createElement(
+	    "div",
+	    null,
+	    _react2.default.createElement(
+	      "div",
+	      { className: "navbar navbar-inverse navbar-fixed-top", role: "navigation" },
+	      _react2.default.createElement(
+	        "div",
+	        { className: "navbar-header" },
+	        _react2.default.createElement(
+	          "button",
+	          { type: "button", className: "navbar-toggle", "data-toggle": "collapse", "data-target": ".navbar-collapse" },
+	          _react2.default.createElement(
+	            "span",
+	            { className: "sr-only" },
+	            "Toggle navigation"
+	          ),
+	          _react2.default.createElement("span", { className: "icon-bar" }),
+	          _react2.default.createElement("span", { className: "icon-bar" }),
+	          _react2.default.createElement("span", { className: "icon-bar" })
+	        ),
+	        _react2.default.createElement(
+	          "a",
+	          { className: "navbar-brand", href: "/" },
+	          _react2.default.createElement("img", { src: "/busTrackerOutline.png", alt: "bus tracker logo" }),
+	          _react2.default.createElement(
+	            "span",
+	            null,
+	            "Astoot Commute"
+	          )
+	        )
+	      ),
+	      _react2.default.createElement(
+	        "div",
+	        { className: "collapse navbar-collapse" },
+	        _react2.default.createElement(
+	          "ul",
+	          { className: "nav navbar-nav" },
+	          _react2.default.createElement(
+	            "li",
+	            { className: "active" },
+	            _react2.default.createElement(
+	              "a",
+	              { href: "/" },
+	              "Home"
+	            )
+	          ),
+	          _react2.default.createElement(
+	            "li",
+	            null,
+	            _react2.default.createElement(
+	              "a",
+	              { href: "/about" },
+	              "About"
+	            )
+	          ),
+	          _react2.default.createElement(
+	            "li",
+	            null,
+	            _react2.default.createElement(
+	              "a",
+	              { href: "/contact" },
+	              "Contact"
+	            )
+	          )
+	        )
+	      )
+	    )
+	  );
+	};
 
 /***/ }
 /******/ ]);
