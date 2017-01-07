@@ -3,8 +3,8 @@ import Stops from '../components/Stops';
 
 function mapStateToProps(state, ownProps) {
   return {
-    selectedRoute: state.selectedRoute,
-    stops: state.stops
+    selectedRoute: state.cta.selectedRoute,
+    stops: state.cta.stops
   }
 }
 

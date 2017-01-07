@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 
 function mapStateToProps(state, ownProps) {
   return {
-    selectedRoute: state.selectedRoute
+    selectedRoute: state.cta.selectedRoute
   }
 }
 

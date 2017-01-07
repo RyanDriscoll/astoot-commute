@@ -18,10 +18,10 @@ export default (props) => {
     <div>
       {
         stops && stops.map(stop => (
-          <div className="col-xs-12 col-sm-6 col-md-4" key={stop.id}>
+          <div className="col-xs-12 col-sm-12 col-md-6" key={stop.id}>
             <Link to={`/arrivals/${route.routeNumber}/${direction}/${stop.stopId}`}>
               <div className="list-group-item" >
-                <h5><span>{stop.name}</span></h5>
+                <h2><span>{stop.name}</span></h2>
               </div>
             </Link>
           </div>

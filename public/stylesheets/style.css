@@ -1,3 +1,7 @@
+body {
+  box-sizing: border-box
+}
+
 .app {
   padding-top: 100px;
 }
@@ -12,4 +16,26 @@
 .navbar-brand > img {
   height: 50px;
   display: inline-block;
+}
+
+.list-group-item {
+  height: 100px;
+}
+
+.arrivalUpdate-enter {
+  opacity: 0.01;
+}
+
+.arrivalUpdate-enter.arrivalUpdate-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+
+.arrivalUpdate-leave {
+  opacity: 1;
+}
+
+.arrivalUpdate-leave.arrivalUpdate-leave-active {
+  opacity: 0.01;
+  transition: opacity 300ms ease-in;
 }

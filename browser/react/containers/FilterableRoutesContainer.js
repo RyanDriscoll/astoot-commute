@@ -36,13 +36,14 @@ class FilterableRoutesContainer extends React.Component {
 
   render() {
     const inputValue = this.state.inputValue;
-    const filteredRoutes = this.state.routes.filter(route => {
+    const filteredRoutes = this.state.cta.routes.filter(route => {
       return route.name.toLowerCase().match(inputValue.toLowerCase()) ||
       route.routeNumber.match(inputValue);
     });
 
     return (
       <div>
+        <h1><span>Select a route</span></h1>
         <FilterInput
           handleChange={this.handleChange}
           inputValue={inputValue}

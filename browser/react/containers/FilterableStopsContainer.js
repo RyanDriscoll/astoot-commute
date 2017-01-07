@@ -35,9 +35,9 @@ class FilterableStopsContainer extends React.Component {
 
   render() {
     const inputValue = this.state.inputValue;
-    const route = this.state.selectedRoute;
-    const direction = this.state.direction;
-    const filteredStops = this.state.stops.filter(stop => {
+    const route = this.state.cta.selectedRoute;
+    const direction = this.state.cta.direction;
+    const filteredStops = this.state.cta.stops.filter(stop => {
       return stop.name.toLowerCase().match(inputValue.toLowerCase())
     });
 
@@ -50,8 +50,8 @@ class FilterableStopsContainer extends React.Component {
         />
         <Stops
           stops={filteredStops}
-          direction={this.state.direction}
-          selectedRoute={this.state.selectedRoute} />
+          direction={direction}
+          selectedRoute={route} />
       </div>
     );
   }

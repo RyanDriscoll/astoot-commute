@@ -10,10 +10,13 @@ export default (props) => {
       <h1><span>{selectedRoute.routeNumber}</span>  <span>{selectedRoute.name}</span></h1>
       {
         directions && directions.map(direction => (
-
-      <Link className="btn btn-primary" key={direction} to={`/routes/${selectedRoute.routeNumber}/${direction}`}>
-        <span>{direction}</span>
-      </Link>
+      <div className="col-xs-12 col-sm-12 col-md-6" key={direction}>
+        <Link to={`/routes/${selectedRoute.routeNumber}/${direction}`}>
+          <div className="list-group-item" >
+            <h2><span>{direction}</span></h2>
+          </div>
+        </Link>
+      </div>
 
         ))
       }

@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 
 function mapStateToProps(state, ownProps) {
   return {
-    routes: state.routes
+    routes: state.cta.routes
 
   }
 }
