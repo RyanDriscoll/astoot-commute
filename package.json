@@ -5,8 +5,7 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack -w & nodemon app.js",
-    "postinstall": "node seed.js"
+    "start": "webpack -w & nodemon app.js"
   },
   "author": "Ryan Driscoll",
   "license": "ISC",
