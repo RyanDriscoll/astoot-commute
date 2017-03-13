@@ -8,7 +8,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const PORT = process.env.PORT || 3000;
 
-
+console.log(PORT, 'port<_________')
 app.use(express.static('./public'));
 app.use(express.static('./node_modules'));
 app.use(express.static('./browser'));
