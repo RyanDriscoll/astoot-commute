@@ -1,29 +1,14 @@
 import React from 'react';
-import store from '../store';
-import {fadesUp} from './animation-components';
+import {TweenLite} from 'gsap';
 
-import TransitionGroup from 'react-addons-transition-group';
-// import ReactDOM from 'react-dom';
-
-const Arrival = fadesUp(class extends React.Component {
+class Arrival extends React.Component {
   constructor(props) {
-
     super(props);
-
-    this.state = Object.assign({
-      arrivals: [],
-      errorMsg: ''
-    }, store.getState());
-
     this.predictionHandler = this.predictionHandler.bind(this);
   }
 
   componentDidMount() {
-    // const el = findDOMNode(this);
-    // TweenLite.fromTo(el, 1, {y: 100, opacity: 0}, {y: 0, opacity: 1, onComplete: callback});
-    this.unsubscribe = store.subscribe(() => {
-      this.setState(store.getState());
-    });
+    TweenLite.fromTo(this.el, 1, {y: 100, opacity: 0}, {y: 0, opacity: 1});
   }
 
   shouldComponentUpdate(nextProps){
@@ -32,23 +17,12 @@ const Arrival = fadesUp(class extends React.Component {
     return true;
   }
 
-  // componentWillUpdate(nextProps, nextState){
-  //   const el = findDOMNode(this);
-  //   TweenLite.fromTo(el, 0.3, {y: 0, opacity: 1}, {y: 100, opacity: 0, onComplete: () => {
-  //     TweenLite.fromTo(el, 1, {y: -100, opacity: 0, color: 'blue'}, {y: 0, opacity: 1, color: 'black'});
-  //     }
-  //   });
-  // }
-
-  // componentWillEnter (callback) {
-  //   const el = findDOMNode(this);
-  //   TweenMax.fromTo(el, 1, {y: 100, opacity: 0}, {y: 0, opacity: 1, onComplete: callback});
-  // }
-
-  // componentWillLeave (callback) {
-  //   const el = findDOMNode(this);
-  //   TweenMax.fromTo(el, 1, {y: 0, opacity: 1}, {y: -100, opacity: 0, onComplete: callback});
-  // }
+  componentWillUpdate(nextProps, nextState){
+    TweenLite.fromTo(this.el, 0.3, {y: 0, opacity: 1}, {y: 100, opacity: 0, onComplete: () => {
+      TweenLite.fromTo(this.el, 1, {y: -100, opacity: 0, color: 'blue'}, {y: 0, opacity: 1, color: 'black'});
+      }
+    });
+  }
 
   predictionHandler(arrival) {
     const arr = arrival.prdtm.split(' ');
@@ -69,13 +43,15 @@ const Arrival = fadesUp(class extends React.Component {
 
   render () {
     return (
-      <div className="col-xs-12 col-sm-12 col-md-4">
+      <div
+        className="col-xs-12 col-sm-12 col-md-4"
+        ref={el => {this.el = el;}}>
         <div className="list-group-item" >
           <h2><span>{this.predictionHandler(this.props.arrival)}</span></h2>
         </div>
       </div>
     )
   }
-})
+}
 
 export default Arrival;

@@ -27,11 +27,11 @@ export const fadesUp = (Component) => {
     //     onComplete: callback
     //   });
     // }
-    shouldComponentUpdate(nextProps, nextState){
-      console.log('in animation-components')
-      if (JSON.stringify(nextProps) === JSON.stringify(this.state) ) return false;
-      return true;
-    }
+    // shouldComponentUpdate(nextProps, nextState){
+    //   console.log('in animation-components')
+    //   if (JSON.stringify(nextProps) === JSON.stringify(this.state) ) return false;
+    //   return true;
+    // }
 
     componentDidUpdate(nextProps, nextState){
       const el = findDOMNode(this);
