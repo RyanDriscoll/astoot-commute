@@ -1,5 +1,5 @@
 const axios = require('axios');
-const ApiKey = require('./secret');
+const ApiKey = process.env.cta_api_key;
 const ctaApiPrefix = 'http://www.ctabustracker.com/bustime/api/v2/';
 const format = '&format=json';
 // const process = require('process');
