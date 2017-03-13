@@ -72,23 +72,23 @@
 	
 	var _Arrivals2 = _interopRequireDefault(_Arrivals);
 	
-	var _Login = __webpack_require__(326);
+	var _Login = __webpack_require__(328);
 	
 	var _Login2 = _interopRequireDefault(_Login);
 	
-	var _RoutesContainer = __webpack_require__(327);
+	var _RoutesContainer = __webpack_require__(329);
 	
 	var _RoutesContainer2 = _interopRequireDefault(_RoutesContainer);
 	
-	var _FilterableStopsContainer = __webpack_require__(329);
+	var _FilterableStopsContainer = __webpack_require__(331);
 	
 	var _FilterableStopsContainer2 = _interopRequireDefault(_FilterableStopsContainer);
 	
-	var _RouteContainer = __webpack_require__(332);
+	var _RouteContainer = __webpack_require__(334);
 	
 	var _RouteContainer2 = _interopRequireDefault(_RouteContainer);
 	
-	var _FilterableRoutesContainer = __webpack_require__(334);
+	var _FilterableRoutesContainer = __webpack_require__(336);
 	
 	var _FilterableRoutesContainer2 = _interopRequireDefault(_FilterableRoutesContainer);
 	
@@ -103,15 +103,10 @@
 	  _store2.default.dispatch((0, _ctaActionCreators.loadSelectedRoute)(routeId));
 	};
 	
-	var onStopsEnter = function onStopsEnter(nextRouterState) {
+	var onStopsOrArrivalsEnter = function onStopsOrArrivalsEnter(nextRouterState) {
 	  var routeId = nextRouterState.params.routeId;
 	  var direction = nextRouterState.params.direction;
 	  _store2.default.dispatch((0, _ctaActionCreators.loadStops)(routeId, direction));
-	  _store2.default.dispatch((0, _ctaActionCreators.loadSelectedRoute)(routeId));
-	};
-	
-	var onArrivalsEnter = function onArrivalsEnter(nextRouterState) {
-	  var routeId = nextRouterState.params.routeId;
 	  _store2.default.dispatch((0, _ctaActionCreators.loadSelectedRoute)(routeId));
 	};
 	
@@ -127,8 +122,8 @@
 	      _react2.default.createElement(_reactRouter.IndexRoute, { component: _FilterableRoutesContainer2.default }),
 	      _react2.default.createElement(_reactRouter.Route, { path: '/routes', component: _FilterableRoutesContainer2.default }),
 	      _react2.default.createElement(_reactRouter.Route, { path: '/routes/:routeId', component: _RouteContainer2.default, onEnter: onSelectedRouteEnter }),
-	      _react2.default.createElement(_reactRouter.Route, { path: '/routes/:routeId/:direction', component: _FilterableStopsContainer2.default, onEnter: onStopsEnter }),
-	      _react2.default.createElement(_reactRouter.Route, { path: '/arrivals/:routeId/:direction/:stopId', component: _Arrivals2.default, onEnter: onArrivalsEnter }),
+	      _react2.default.createElement(_reactRouter.Route, { path: '/routes/:routeId/:direction', component: _FilterableStopsContainer2.default, onEnter: onStopsOrArrivalsEnter }),
+	      _react2.default.createElement(_reactRouter.Route, { path: '/arrivals/:routeId/:direction/:stopId', component: _Arrivals2.default, onEnter: onStopsOrArrivalsEnter }),
 	      _react2.default.createElement(_reactRouter.Route, { path: '/login', component: _Login2.default })
 	    )
 	  )
@@ -4347,6 +4342,13 @@
 	var internalInstanceKey = '__reactInternalInstance$' + Math.random().toString(36).slice(2);
 	
 	/**
+	 * Check if a given node should be cached.
+	 */
+	function shouldPrecacheNode(node, nodeID) {
+	  return node.nodeType === 1 && node.getAttribute(ATTR_NAME) === String(nodeID) || node.nodeType === 8 && node.nodeValue === ' react-text: ' + nodeID + ' ' || node.nodeType === 8 && node.nodeValue === ' react-empty: ' + nodeID + ' ';
+	}
+	
+	/**
 	 * Drill down (through composites and empty components) until we get a host or
 	 * host text component.
 	 *
@@ -4411,7 +4413,7 @@
 	    }
 	    // We assume the child nodes are in the same order as the child instances.
 	    for (; childNode !== null; childNode = childNode.nextSibling) {
-	      if (childNode.nodeType === 1 && childNode.getAttribute(ATTR_NAME) === String(childID) || childNode.nodeType === 8 && childNode.nodeValue === ' react-text: ' + childID + ' ' || childNode.nodeType === 8 && childNode.nodeValue === ' react-empty: ' + childID + ' ') {
+	      if (shouldPrecacheNode(childNode, childID)) {
 	        precacheNode(childInst, childNode);
 	        continue outer;
 	      }
@@ -6652,17 +6654,6 @@
 	  }
 	};
 	
-	var fiveArgumentPooler = function (a1, a2, a3, a4, a5) {
-	  var Klass = this;
-	  if (Klass.instancePool.length) {
-	    var instance = Klass.instancePool.pop();
-	    Klass.call(instance, a1, a2, a3, a4, a5);
-	    return instance;
-	  } else {
-	    return new Klass(a1, a2, a3, a4, a5);
-	  }
-	};
-	
 	var standardReleaser = function (instance) {
 	  var Klass = this;
 	  !(instance instanceof Klass) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Trying to release an instance into a pool of a different type.') : _prodInvariant('25') : void 0;
@@ -6702,8 +6693,7 @@
 	  oneArgumentPooler: oneArgumentPooler,
 	  twoArgumentPooler: twoArgumentPooler,
 	  threeArgumentPooler: threeArgumentPooler,
-	  fourArgumentPooler: fourArgumentPooler,
-	  fiveArgumentPooler: fiveArgumentPooler
+	  fourArgumentPooler: fourArgumentPooler
 	};
 	
 	module.exports = PooledClass;
@@ -11521,12 +11511,18 @@
 	    } else {
 	      var contentToUse = CONTENT_TYPES[typeof props.children] ? props.children : null;
 	      var childrenToUse = contentToUse != null ? null : props.children;
+	      // TODO: Validate that text is allowed as a child of this node
 	      if (contentToUse != null) {
-	        // TODO: Validate that text is allowed as a child of this node
-	        if (process.env.NODE_ENV !== 'production') {
-	          setAndValidateContentChildDev.call(this, contentToUse);
+	        // Avoid setting textContent when the text is empty. In IE11 setting
+	        // textContent on a text area will cause the placeholder to not
+	        // show within the textarea until it has been focused and blurred again.
+	        // https://github.com/facebook/react/issues/6731#issuecomment-254874553
+	        if (contentToUse !== '') {
+	          if (process.env.NODE_ENV !== 'production') {
+	            setAndValidateContentChildDev.call(this, contentToUse);
+	          }
+	          DOMLazyTree.queueText(lazyTree, contentToUse);
 	        }
-	        DOMLazyTree.queueText(lazyTree, contentToUse);
 	      } else if (childrenToUse != null) {
 	        var mountImages = this.mountChildren(childrenToUse, transaction, context);
 	        for (var i = 0; i < mountImages.length; i++) {
@@ -13446,7 +13442,17 @@
 	      }
 	    } else {
 	      if (props.value == null && props.defaultValue != null) {
-	        node.defaultValue = '' + props.defaultValue;
+	        // In Chrome, assigning defaultValue to certain input types triggers input validation.
+	        // For number inputs, the display value loses trailing decimal points. For email inputs,
+	        // Chrome raises "The specified value <x> is not a valid email address".
+	        //
+	        // Here we check to see if the defaultValue has actually changed, avoiding these problems
+	        // when the user is inputting text
+	        //
+	        // https://github.com/facebook/react/issues/7253
+	        if (node.defaultValue !== '' + props.defaultValue) {
+	          node.defaultValue = '' + props.defaultValue;
+	        }
 	      }
 	      if (props.checked == null && props.defaultChecked != null) {
 	        node.defaultChecked = !!props.defaultChecked;
@@ -14193,9 +14199,15 @@
 	    // This is in postMount because we need access to the DOM node, which is not
 	    // available until after the component has mounted.
 	    var node = ReactDOMComponentTree.getNodeFromInstance(inst);
+	    var textContent = node.textContent;
 	
-	    // Warning: node.value may be the empty string at this point (IE11) if placeholder is set.
-	    node.value = node.textContent; // Detach value from defaultValue
+	    // Only set node.value if textContent is equal to the expected
+	    // initial value. In IE10/IE11 there is a bug where the placeholder attribute
+	    // will populate textContent as well.
+	    // https://developer.microsoft.com/microsoft-edge/platform/issues/101525/
+	    if (textContent === inst._wrapperState.initialValue) {
+	      node.value = textContent;
+	    }
 	  }
 	};
 	
@@ -14997,7 +15009,17 @@
 	    instance = ReactEmptyComponent.create(instantiateReactComponent);
 	  } else if (typeof node === 'object') {
 	    var element = node;
-	    !(element && (typeof element.type === 'function' || typeof element.type === 'string')) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: %s.%s', element.type == null ? element.type : typeof element.type, getDeclarationErrorAddendum(element._owner)) : _prodInvariant('130', element.type == null ? element.type : typeof element.type, getDeclarationErrorAddendum(element._owner)) : void 0;
+	    var type = element.type;
+	    if (typeof type !== 'function' && typeof type !== 'string') {
+	      var info = '';
+	      if (process.env.NODE_ENV !== 'production') {
+	        if (type === undefined || typeof type === 'object' && type !== null && Object.keys(type).length === 0) {
+	          info += ' You likely forgot to export your component from the file ' + 'it\'s defined in.';
+	        }
+	      }
+	      info += getDeclarationErrorAddendum(element._owner);
+	       true ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: %s.%s', type == null ? type : typeof type, info) : _prodInvariant('130', type == null ? type : typeof type, info) : void 0;
+	    }
 	
 	    // Special case string values
 	    if (typeof element.type === 'string') {
@@ -15287,7 +15309,7 @@
 	      // Since plain JS classes are defined without any special initialization
 	      // logic, we can not catch common errors early. Therefore, we have to
 	      // catch them here, at initialization time, instead.
-	      process.env.NODE_ENV !== 'production' ? warning(!inst.getInitialState || inst.getInitialState.isReactClassApproved, 'getInitialState was defined on %s, a plain JavaScript class. ' + 'This is only supported for classes created using React.createClass. ' + 'Did you mean to define a state property instead?', this.getName() || 'a component') : void 0;
+	      process.env.NODE_ENV !== 'production' ? warning(!inst.getInitialState || inst.getInitialState.isReactClassApproved || inst.state, 'getInitialState was defined on %s, a plain JavaScript class. ' + 'This is only supported for classes created using React.createClass. ' + 'Did you mean to define a state property instead?', this.getName() || 'a component') : void 0;
 	      process.env.NODE_ENV !== 'production' ? warning(!inst.getDefaultProps || inst.getDefaultProps.isReactClassApproved, 'getDefaultProps was defined on %s, a plain JavaScript class. ' + 'This is only supported for classes created using React.createClass. ' + 'Use a static property to define defaultProps instead.', this.getName() || 'a component') : void 0;
 	      process.env.NODE_ENV !== 'production' ? warning(!inst.propTypes, 'propTypes was defined as an instance property on %s. Use a static ' + 'property to define propTypes instead.', this.getName() || 'a component') : void 0;
 	      process.env.NODE_ENV !== 'production' ? warning(!inst.contextTypes, 'contextTypes was defined as an instance property on %s. Use a ' + 'static property to define contextTypes instead.', this.getName() || 'a component') : void 0;
@@ -16291,14 +16313,11 @@
 	
 	'use strict';
 	
-	var _prodInvariant = __webpack_require__(35),
-	    _assign = __webpack_require__(4);
+	var _prodInvariant = __webpack_require__(35);
 	
 	var invariant = __webpack_require__(8);
 	
 	var genericComponentClass = null;
-	// This registry keeps track of wrapper classes around host tags.
-	var tagToComponentClass = {};
 	var textComponentClass = null;
 	
 	var ReactHostComponentInjection = {
@@ -16311,11 +16330,6 @@
 	  // rendered as props.
 	  injectTextComponentClass: function (componentClass) {
 	    textComponentClass = componentClass;
-	  },
-	  // This accepts a keyed object with classes as values. Each key represents a
-	  // tag. That particular tag will use this class instead of the generic one.
-	  injectComponentClasses: function (componentClasses) {
-	    _assign(tagToComponentClass, componentClasses);
 	  }
 	};
 	
@@ -21170,7 +21184,7 @@
 	
 	'use strict';
 	
-	module.exports = '15.4.1';
+	module.exports = '15.4.2';
 
 /***/ },
 /* 172 */
@@ -31626,7 +31640,7 @@
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
-	var _Arrival = __webpack_require__(335);
+	var _Arrival = __webpack_require__(326);
 	
 	var _Arrival2 = _interopRequireDefault(_Arrival);
 	
@@ -31701,22 +31715,6 @@
 	        console.error(err.stack);
 	      });
 	    }
-	
-	    // predictionHandler(index) {
-	    //   const arrival = this.state.arrivals[index];
-	    //   const arr = arrival.prdtm.split(' ');
-	    //   let arrivalTime = `${arr[0].slice(0,4)}/${arr[0].slice(4,6)}/${arr[0].slice(6)} ${arr[1]}`
-	    //   const estimate = Math.floor((new Date(arrivalTime) - new Date())/ 1000/ 60);
-	    //   const delay = `Experiencing delays: best estimate for arrival in ${estimate} minutes`;
-	    //   return arrival.dly ?
-	    //     <span>{delay}</span>
-	    //     :
-	    //     arrival.prdctdn === 'DUE' ?
-	    //       <span>Due</span>
-	    //       :
-	    //       <span>{arrival.prdctdn} minutes</span>
-	    // }
-	
 	  }, {
 	    key: 'render',
 	    value: function render() {
@@ -31740,7 +31738,7 @@
 	          )
 	        ),
 	        !!arrivals.length && arrivals.map(function (arrival, i) {
-	          return _react2.default.createElement(_Arrival2.default, { arrival: arrival, arrivals: arrivals, index: i, key: arrival.vid });
+	          return _react2.default.createElement(_Arrival2.default, { arrival: arrival, index: i, key: arrival.vid });
 	        })
 	      );
 	    }
@@ -41708,6 +41706,265 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
+	var _store = __webpack_require__(269);
+	
+	var _store2 = _interopRequireDefault(_store);
+	
+	var _animationComponents = __webpack_require__(327);
+	
+	var _reactAddonsTransitionGroup = __webpack_require__(323);
+	
+	var _reactAddonsTransitionGroup2 = _interopRequireDefault(_reactAddonsTransitionGroup);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	// import ReactDOM from 'react-dom';
+	
+	var Arrival = (0, _animationComponents.fadesUp)(function (_React$Component) {
+	  _inherits(_class, _React$Component);
+	
+	  function _class(props) {
+	    _classCallCheck(this, _class);
+	
+	    var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, props));
+	
+	    _this.state = Object.assign({
+	      arrivals: [],
+	      errorMsg: ''
+	    }, _store2.default.getState());
+	
+	    _this.predictionHandler = _this.predictionHandler.bind(_this);
+	    return _this;
+	  }
+	
+	  _createClass(_class, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var _this2 = this;
+	
+	      // const el = findDOMNode(this);
+	      // TweenLite.fromTo(el, 1, {y: 100, opacity: 0}, {y: 0, opacity: 1, onComplete: callback});
+	      this.unsubscribe = _store2.default.subscribe(function () {
+	        _this2.setState(_store2.default.getState());
+	      });
+	    }
+	  }, {
+	    key: 'shouldComponentUpdate',
+	    value: function shouldComponentUpdate(nextProps) {
+	      console.log('is it in shouldComponentUpdate?', nextProps.arrival.prdctdn, this.props.arrival.prdctdn);
+	      if (nextProps.arrival.prdctdn === this.props.arrival.prdctdn) return false;
+	      return true;
+	    }
+	
+	    // componentWillUpdate(nextProps, nextState){
+	    //   const el = findDOMNode(this);
+	    //   TweenLite.fromTo(el, 0.3, {y: 0, opacity: 1}, {y: 100, opacity: 0, onComplete: () => {
+	    //     TweenLite.fromTo(el, 1, {y: -100, opacity: 0, color: 'blue'}, {y: 0, opacity: 1, color: 'black'});
+	    //     }
+	    //   });
+	    // }
+	
+	    // componentWillEnter (callback) {
+	    //   const el = findDOMNode(this);
+	    //   TweenMax.fromTo(el, 1, {y: 100, opacity: 0}, {y: 0, opacity: 1, onComplete: callback});
+	    // }
+	
+	    // componentWillLeave (callback) {
+	    //   const el = findDOMNode(this);
+	    //   TweenMax.fromTo(el, 1, {y: 0, opacity: 1}, {y: -100, opacity: 0, onComplete: callback});
+	    // }
+	
+	  }, {
+	    key: 'predictionHandler',
+	    value: function predictionHandler(arrival) {
+	      var arr = arrival.prdtm.split(' ');
+	      var arrivalTime = arr[0].slice(0, 4) + '/' + arr[0].slice(4, 6) + '/' + arr[0].slice(6) + ' ' + arr[1];
+	      var estimate = Math.floor((new Date(arrivalTime) - new Date()) / 1000 / 60);
+	      var delay = 'Experiencing delays: best estimate for arrival in ' + estimate + ' minutes';
+	      if (arrival.dly) return _react2.default.createElement(
+	        'span',
+	        null,
+	        delay
+	      );else {
+	        if (arrival.prdctdn === 'DUE') {
+	          return _react2.default.createElement(
+	            'span',
+	            null,
+	            'Due'
+	          );
+	        } else if (arrival.prdctdn === '1') {
+	          return _react2.default.createElement(
+	            'span',
+	            null,
+	            arrival.prdctdn,
+	            ' minute'
+	          );
+	        } else {
+	          return _react2.default.createElement(
+	            'span',
+	            null,
+	            arrival.prdctdn,
+	            ' minutes'
+	          );
+	        }
+	      }
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'col-xs-12 col-sm-12 col-md-4' },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'list-group-item' },
+	          _react2.default.createElement(
+	            'h2',
+	            null,
+	            _react2.default.createElement(
+	              'span',
+	              null,
+	              this.predictionHandler(this.props.arrival)
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return _class;
+	}(_react2.default.Component));
+	
+	exports.default = Arrival;
+
+/***/ },
+/* 327 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.fadesUp = undefined;
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactDom = __webpack_require__(32);
+	
+	var _gsap = __webpack_require__(324);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var fadesUp = exports.fadesUp = function fadesUp(Component) {
+	  return function (_React$Component) {
+	    _inherits(FadesUp, _React$Component);
+	
+	    function FadesUp() {
+	      _classCallCheck(this, FadesUp);
+	
+	      return _possibleConstructorReturn(this, (FadesUp.__proto__ || Object.getPrototypeOf(FadesUp)).apply(this, arguments));
+	    }
+	
+	    _createClass(FadesUp, [{
+	      key: 'shouldComponentUpdate',
+	
+	      // componentWillEnter (callback) {
+	      //   const el = findDOMNode(this);
+	      //   TweenLite.fromTo(el, 0.3, {
+	      //     y: 100,
+	      //     opacity: 0
+	      //   }, {
+	      //     y: 0,
+	      //     opacity: 1,
+	      //     onComplete: callback
+	      //   });
+	      // }
+	
+	      // componentWillLeave (callback) {
+	      //   const el = findDOMNode(this);
+	      //   TweenLite.fromTo(el, 0.3, {
+	      //     y: 0,
+	      //     opacity: 1
+	      //   }, {
+	      //     y: -100,
+	      //     opacity: 0,
+	      //     onComplete: callback
+	      //   });
+	      // }
+	      value: function shouldComponentUpdate(nextProps, nextState) {
+	        console.log('in animation-components');
+	        if (JSON.stringify(nextProps) === JSON.stringify(this.state)) return false;
+	        return true;
+	      }
+	    }, {
+	      key: 'componentDidUpdate',
+	      value: function componentDidUpdate(nextProps, nextState) {
+	        var el = (0, _reactDom.findDOMNode)(this);
+	        _gsap.TweenLite.fromTo(el, 0.3, {
+	          y: 0,
+	          opacity: 1
+	        }, {
+	          y: 100,
+	          opacity: 0,
+	          onComplete: function onComplete() {
+	            _gsap.TweenLite.fromTo(el, 1, {
+	              y: -100,
+	              opacity: 0,
+	              color: 'blue'
+	            }, {
+	              y: 0,
+	              opacity: 1,
+	              color: 'black'
+	            });
+	          }
+	        });
+	      }
+	    }, {
+	      key: 'render',
+	      value: function render() {
+	        return _react2.default.createElement(Component, _extends({ ref: 'child' }, this.props));
+	      }
+	    }]);
+	
+	    return FadesUp;
+	  }(_react2.default.Component);
+	};
+
+/***/ },
+/* 328 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
 	var _reactRedux = __webpack_require__(241);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -41862,7 +42119,7 @@
 	exports.default = (0, _reactRedux.connect)(mapState, mapDispatch)(Login);
 
 /***/ },
-/* 327 */
+/* 329 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -41871,7 +42128,7 @@
 	  value: true
 	});
 	
-	var _Routes = __webpack_require__(328);
+	var _Routes = __webpack_require__(330);
 	
 	var _Routes2 = _interopRequireDefault(_Routes);
 	
@@ -41896,7 +42153,7 @@
 	exports.default = RoutesContainer;
 
 /***/ },
-/* 328 */
+/* 330 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -41955,7 +42212,7 @@
 	};
 
 /***/ },
-/* 329 */
+/* 331 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -41970,11 +42227,11 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _FilterInput = __webpack_require__(330);
+	var _FilterInput = __webpack_require__(332);
 	
 	var _FilterInput2 = _interopRequireDefault(_FilterInput);
 	
-	var _Stops = __webpack_require__(331);
+	var _Stops = __webpack_require__(333);
 	
 	var _Stops2 = _interopRequireDefault(_Stops);
 	
@@ -42079,7 +42336,7 @@
 	exports.default = FilterableStopsContainer;
 
 /***/ },
-/* 330 */
+/* 332 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -42114,7 +42371,7 @@
 	exports.default = FilterInput;
 
 /***/ },
-/* 331 */
+/* 333 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -42174,7 +42431,7 @@
 	};
 
 /***/ },
-/* 332 */
+/* 334 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -42183,7 +42440,7 @@
 	  value: true
 	});
 	
-	var _Route = __webpack_require__(333);
+	var _Route = __webpack_require__(335);
 	
 	var _Route2 = _interopRequireDefault(_Route);
 	
@@ -42207,7 +42464,7 @@
 	exports.default = RouteContainer;
 
 /***/ },
-/* 333 */
+/* 335 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -42273,7 +42530,7 @@
 	};
 
 /***/ },
-/* 334 */
+/* 336 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -42288,11 +42545,11 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _FilterInput = __webpack_require__(330);
+	var _FilterInput = __webpack_require__(332);
 	
 	var _FilterInput2 = _interopRequireDefault(_FilterInput);
 	
-	var _Routes = __webpack_require__(328);
+	var _Routes = __webpack_require__(330);
 	
 	var _Routes2 = _interopRequireDefault(_Routes);
 	
@@ -42379,153 +42636,6 @@
 	}(_react2.default.Component);
 	
 	exports.default = FilterableRoutesContainer;
-
-/***/ },
-/* 335 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _react = __webpack_require__(1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _store = __webpack_require__(269);
-	
-	var _store2 = _interopRequireDefault(_store);
-	
-	var _reactAddonsTransitionGroup = __webpack_require__(323);
-	
-	var _reactAddonsTransitionGroup2 = _interopRequireDefault(_reactAddonsTransitionGroup);
-	
-	var _gsap = __webpack_require__(324);
-	
-	var _gsap2 = _interopRequireDefault(_gsap);
-	
-	var _reactDom = __webpack_require__(32);
-	
-	var _reactDom2 = _interopRequireDefault(_reactDom);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var findDOMNode = _reactDom2.default.findDOMNode;
-	
-	var Arrival = function (_React$Component) {
-	  _inherits(Arrival, _React$Component);
-	
-	  function Arrival(props) {
-	    _classCallCheck(this, Arrival);
-	
-	    var _this = _possibleConstructorReturn(this, (Arrival.__proto__ || Object.getPrototypeOf(Arrival)).call(this, props));
-	
-	    _this.state = Object.assign({
-	      arrivals: [],
-	      errorMsg: ''
-	    }, _store2.default.getState());
-	
-	    _this.predictionHandler = _this.predictionHandler.bind(_this);
-	    return _this;
-	  }
-	
-	  _createClass(Arrival, [{
-	    key: 'componentDidMount',
-	    value: function componentDidMount(callback) {
-	      var _this2 = this;
-	
-	      var el = findDOMNode(this);
-	      _gsap2.default.fromTo(el, 1, { y: 100, opacity: 0 }, { y: 0, opacity: 1, onComplete: callback });
-	      this.unsubscribe = _store2.default.subscribe(function () {
-	        _this2.setState(_store2.default.getState());
-	      });
-	    }
-	  }, {
-	    key: 'shouldComponentUpdate',
-	    value: function shouldComponentUpdate(nextProps, nextState) {
-	      // return a boolean value
-	      if (nextProps.arrival.prdctdn === this.props.arrival.prdctdn) return false;
-	      return true;
-	    }
-	  }, {
-	    key: 'componentWillUpdate',
-	    value: function componentWillUpdate(nextProps, nextState) {
-	      // perform any preparations for an upcoming update
-	      var el = findDOMNode(this);
-	      TweenMax.fromTo(el, 1, { y: 100, opacity: 0 }, { y: 0, opacity: 1 });
-	    }
-	  }, {
-	    key: 'componentWillEnter',
-	    value: function componentWillEnter(callback) {
-	      var el = findDOMNode(this);
-	      TweenMax.fromTo(el, 1, { y: 100, opacity: 0 }, { y: 0, opacity: 1, onComplete: callback });
-	    }
-	  }, {
-	    key: 'componentWillLeave',
-	    value: function componentWillLeave(callback) {
-	      var el = findDOMNode(this);
-	      TweenMax.fromTo(el, 1, { y: 0, opacity: 1 }, { y: -100, opacity: 0, onComplete: callback });
-	    }
-	  }, {
-	    key: 'predictionHandler',
-	    value: function predictionHandler(arrival) {
-	      // const arrival = this.state.arrivals[index];
-	      var arr = arrival.prdtm.split(' ');
-	      var arrivalTime = arr[0].slice(0, 4) + '/' + arr[0].slice(4, 6) + '/' + arr[0].slice(6) + ' ' + arr[1];
-	      var estimate = Math.floor((new Date(arrivalTime) - new Date()) / 1000 / 60);
-	      var delay = 'Experiencing delays: best estimate for arrival in ' + estimate + ' minutes';
-	      return arrival.dly ? _react2.default.createElement(
-	        'span',
-	        null,
-	        delay
-	      ) : arrival.prdctdn === 'DUE' ? _react2.default.createElement(
-	        'span',
-	        null,
-	        'Due'
-	      ) : _react2.default.createElement(
-	        'span',
-	        null,
-	        arrival.prdctdn,
-	        ' minutes'
-	      );
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      return _react2.default.createElement(
-	        'div',
-	        { className: 'col-xs-12 col-sm-12 col-md-4' },
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'list-group-item' },
-	          _react2.default.createElement(
-	            'h2',
-	            null,
-	            _react2.default.createElement(
-	              'span',
-	              null,
-	              this.predictionHandler(this.props.arrival)
-	            )
-	          )
-	        )
-	      );
-	    }
-	  }]);
-	
-	  return Arrival;
-	}(_react2.default.Component);
-	
-	exports.default = Arrival;
 
 /***/ }
 /******/ ]);

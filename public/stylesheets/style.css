@@ -3,7 +3,7 @@ body {
 }
 
 .app {
-  padding-top: 100px;
+  padding-top: 70px;
 }
 
 .navbar-brand {
@@ -20,6 +20,7 @@ body {
 
 .list-group-item {
   height: 100px;
+  margin-top: 30px;
 }
 
 .arrivalUpdate-enter {

@@ -1,4 +1,7 @@
-node_modules
 public/bundle.js
 public/bundle.js.map
 secret.js
+/node_modules
+npm-debug.log
+.DS_Store
+/*.env

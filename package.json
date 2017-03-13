@@ -4,11 +4,16 @@
   "description": "",
   "main": "app.js",
   "scripts": {
+    "preinstall": "webpack",
+    "postinstall": "node seed.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack -w & nodemon app.js"
   },
-  "author": "",
+  "author": "Ryan Driscoll",
   "license": "ISC",
+  "engines": {
+    "node": "7.0.0"
+  },
   "dependencies": {
     "axios": "^0.15.3",
     "babel": "^6.5.2",

@@ -57,21 +57,6 @@ class Arrivals extends React.Component {
     });
   }
 
-  // predictionHandler(index) {
-  //   const arrival = this.state.arrivals[index];
-  //   const arr = arrival.prdtm.split(' ');
-  //   let arrivalTime = `${arr[0].slice(0,4)}/${arr[0].slice(4,6)}/${arr[0].slice(6)} ${arr[1]}`
-  //   const estimate = Math.floor((new Date(arrivalTime) - new Date())/ 1000/ 60);
-  //   const delay = `Experiencing delays: best estimate for arrival in ${estimate} minutes`;
-  //   return arrival.dly ?
-  //     <span>{delay}</span>
-  //     :
-  //     arrival.prdctdn === 'DUE' ?
-  //       <span>Due</span>
-  //       :
-  //       <span>{arrival.prdctdn} minutes</span>
-  // }
-
   render() {
     const arrivals = this.state.arrivals;
     const errorMsg = this.state.errorMsg;
@@ -85,7 +70,7 @@ class Arrivals extends React.Component {
         <h1><span>{arrivals.length ? upcomingArrivals : errorMsg}</span></h1>
           {
             !!arrivals.length && arrivals.map((arrival, i)=> (
-              <Arrival arrival={arrival} arrivals={arrivals} index={i} key={arrival.vid} />
+              <Arrival arrival={arrival} index={i} key={arrival.vid} />
             ))
           }
       </div>

@@ -6,7 +6,7 @@ const startDb = require('./db');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const session = require('express-session');
-const PORT = 1337;
+const PORT = process.env.PORT || 3000;
 
 
 app.use(express.static('./public'));
@@ -31,6 +31,7 @@ app.use(session({
 }));
 
 app.use(function (req, res, next) {
+  console.log('&&&&&&&&&&&&')
   console.log('session', req.session);
   next();
 });

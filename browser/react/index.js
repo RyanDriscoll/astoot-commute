@@ -23,15 +23,10 @@ const onSelectedRouteEnter = (nextRouterState) => {
   store.dispatch(loadSelectedRoute(routeId));
 }
 
-const onStopsEnter = (nextRouterState) => {
+const onStopsOrArrivalsEnter = (nextRouterState) => {
   const routeId = nextRouterState.params.routeId;
   const direction = nextRouterState.params.direction;
   store.dispatch(loadStops(routeId, direction));
-  store.dispatch(loadSelectedRoute(routeId));
-}
-
-const onArrivalsEnter = (nextRouterState) => {
-  const routeId = nextRouterState.params.routeId;
   store.dispatch(loadSelectedRoute(routeId));
 }
 
@@ -42,8 +37,8 @@ ReactDOM.render(
         <IndexRoute component={FilterableRoutesContainer} />
         <Route path="/routes" component={FilterableRoutesContainer} />
         <Route path="/routes/:routeId" component={RouteContainer} onEnter={onSelectedRouteEnter} />
-        <Route path="/routes/:routeId/:direction" component={FilterableStopsContainer} onEnter={onStopsEnter} />
-        <Route path="/arrivals/:routeId/:direction/:stopId" component={Arrivals} onEnter={onArrivalsEnter} />
+        <Route path="/routes/:routeId/:direction" component={FilterableStopsContainer} onEnter={onStopsOrArrivalsEnter} />
+        <Route path="/arrivals/:routeId/:direction/:stopId" component={Arrivals} onEnter={onStopsOrArrivalsEnter} />
         <Route path="/login" component={Login} />
       </Route>
     </Router>
