@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "preinstall": "webpack",
+    // "preinstall": "webpack",
     "postinstall": "node seed.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack -w & nodemon app.js"
