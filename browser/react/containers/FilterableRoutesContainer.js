@@ -1,32 +1,37 @@
 import React from 'react';
 import FilterInput from '../components/FilterInput';
 import Routes from '../components/Routes';
+import {connect} from 'react-redux';
+
 
 import store from '../store';
 
 class FilterableRoutesContainer extends React.Component {
 
-  constructor() {
+  constructor(props) {
 
-    super();
+    super(props);
 
-    this.state = Object.assign({
+    // this.state = Object.assign({
+    //   inputValue: ''
+    // }, store.getState());
+    this.state = {
       inputValue: ''
-    }, store.getState());
+    };
 
     this.handleChange = this.handleChange.bind(this);
 
   }
 
-  componentDidMount() {
-    this.unsubscribe = store.subscribe(() => {
-      this.setState(store.getState());
-    });
-  }
+  // componentDidMount() {
+  //   this.unsubscribe = store.subscribe(() => {
+  //     this.setState(store.getState());
+  //   });
+  // }
 
-  componentWillUnmount() {
-    this.unsubscribe();
-  }
+  // componentWillUnmount() {
+  //   this.unsubscribe();
+  // }
 
   handleChange(evt) {
     this.setState({
@@ -36,14 +41,14 @@ class FilterableRoutesContainer extends React.Component {
 
   render() {
     const inputValue = this.state.inputValue;
-    const filteredRoutes = this.state.cta.routes.filter(route => {
+    const filteredRoutes = this.props.routes.filter(route => {
       return route.name.toLowerCase().match(inputValue.toLowerCase()) ||
       route.routeNumber.match(inputValue);
     });
 
     return (
-      <div>
-        <h1><span>Select a route</span></h1>
+      <div className="tracker-container">
+        Select a route
         <FilterInput
           handleChange={this.handleChange}
           inputValue={inputValue}
@@ -54,4 +59,10 @@ class FilterableRoutesContainer extends React.Component {
   }
 }
 
-export default FilterableRoutesContainer;
+function mapStateToProps(state, ownProps) {
+  return {
+    routes: state.cta.routes
+  };
+}
+
+export default connect(mapStateToProps)(FilterableRoutesContainer);

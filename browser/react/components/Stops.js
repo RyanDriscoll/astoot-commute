@@ -15,7 +15,7 @@ export default (props) => {
   // todo - link to predictions
 
   return (
-    <div>
+    <div className="item-container">
       {
         stops && stops.map(stop => (
           <div className="col-xs-12 col-sm-12 col-md-6" key={stop.id}>

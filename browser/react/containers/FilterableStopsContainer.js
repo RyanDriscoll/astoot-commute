@@ -1,30 +1,16 @@
 import React from 'react';
+import {connect} from 'react-redux';
 import FilterInput from '../components/FilterInput';
 import Stops from '../components/Stops';
-
-import store from '../store';
 
 class FilterableStopsContainer extends React.Component {
 
   constructor(props) {
-
     super(props);
-
-    this.state = Object.assign({
+    this.state = {
       inputValue: ''
-    }, store.getState());
-
+    };
     this.handleChange = this.handleChange.bind(this);
-  }
-
-  componentDidMount() {
-    this.unsubscribe = store.subscribe(() => {
-      this.setState(store.getState());
-    });
-  }
-
-  componentWillUnmount() {
-    this.unsubscribe();
   }
 
   handleChange(evt) {
@@ -35,15 +21,15 @@ class FilterableStopsContainer extends React.Component {
 
   render() {
     const inputValue = this.state.inputValue;
-    const route = this.state.cta.selectedRoute;
-    const direction = this.state.cta.direction;
-    const filteredStops = this.state.cta.stops.filter(stop => {
+    const route = this.props.selectedRoute;
+    const direction = this.props.direction;
+    const filteredStops = this.props.stops.filter(stop => {
       return stop.name.toLowerCase().match(inputValue.toLowerCase())
     });
 
     return (
-      <div>
-        <h1><span>{route.routeNumber}</span>  <span>{route.name}</span>  <span>{direction}</span></h1>
+      <div className="tracker-container">
+        {`${route.routeNumber} ${route.name} ${direction}`}
         <FilterInput
           handleChange={this.handleChange}
           inputValue={inputValue}
@@ -51,10 +37,23 @@ class FilterableStopsContainer extends React.Component {
         <Stops
           stops={filteredStops}
           direction={direction}
-          selectedRoute={route} />
+          selectedRoute={route}
+        />
       </div>
     );
   }
 }
 
-export default FilterableStopsContainer;
+function mapStateToProps(state, ownProps) {
+  return {
+    selectedRoute: state.cta.selectedRoute,
+    direction: state.cta.direction,
+    stops: state.cta.stops
+  }
+}
+
+// function mapDispatchToProps(dispatch, ownProps) {
+//   return {};
+// }
+
+export default connect(mapStateToProps)(FilterableStopsContainer);

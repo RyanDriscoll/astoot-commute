@@ -1,25 +1,32 @@
 import React from 'react';
 import {Link} from 'react-router';
+import {connect} from 'react-redux';
 
-export default (props) => {
+const Route = (props) => {
   const selectedRoute = props.selectedRoute;
   const directions = selectedRoute.directions;
 
   return (
-    <div>
-      <h1><span>{selectedRoute.routeNumber}</span>  <span>{selectedRoute.name}</span></h1>
+    <div className="tracker-container">
+      {`${selectedRoute.routeNumber} ${selectedRoute.name}`}
       {
         directions && directions.map(direction => (
-      <div className="col-xs-12 col-sm-12 col-md-6" key={direction}>
-        <Link to={`/routes/${selectedRoute.routeNumber}/${direction}`}>
-          <div className="list-group-item" >
-            <h2><span>{direction}</span></h2>
+          <div className="list-group-item" key={direction}>
+            <Link to={`/routes/${selectedRoute.routeNumber}/${direction}`}>
+                {direction}
+            </Link>
           </div>
-        </Link>
-      </div>
-
-        ))
+        )
+      )
       }
     </div>
-  )
+  );
+};
+
+function mapStateToProps(state, ownProps) {
+  return {
+    selectedRoute: state.cta.selectedRoute,
+  };
 }
+
+export default connect(mapStateToProps)(Route);

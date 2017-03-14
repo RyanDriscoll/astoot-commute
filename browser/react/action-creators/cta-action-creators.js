@@ -1,40 +1,43 @@
 import axios from 'axios';
-import {RECEIVE_BUS_ROUTES, RECEIVE_BUS_ROUTE, RECEIVE_BUS_STOPS, RECEIVE_ARRIVALS} from '../constants';
+import {
+  RECEIVE_BUS_ROUTES,
+  RECEIVE_BUS_ROUTE,
+  RECEIVE_BUS_STOPS,
+  RECEIVE_ARRIVALS
+} from '../constants';
 
 
 export const receiveRoutes = routes => ({
   type: RECEIVE_BUS_ROUTES,
   routes
-})
+});
 
 export const receieveSelectedRoute = route => ({
   type: RECEIVE_BUS_ROUTE,
   selectedRoute: route
-})
+});
 
 export const receiveStops = (stops, direction) => ({
   type: RECEIVE_BUS_STOPS,
   stops,
   direction
-})
+});
 
 export const receiveArrivals = (arrivalsObj) => ({
   type: RECEIVE_ARRIVALS,
   arrivalsObj
-})
+});
 
 export const loadAllRoutes = () => {
   return (dispatch) => {
     axios.get('/api/routes')
     .then(res => res.data)
-    .then(routes => {
-      return dispatch(receiveRoutes(routes))
-    })
+    .then(routes => dispatch(receiveRoutes(routes)))
     .catch(err => {
       console.error(err);
     });
-  }
-}
+  };
+};
 
 export const loadSelectedRoute = (routeId) => {
   return (dispatch) => {
@@ -44,8 +47,8 @@ export const loadSelectedRoute = (routeId) => {
     .catch(err => {
       console.error(err.stack);
     });
-  }
-}
+  };
+};
 
 export const loadStops = (routeId, direction) => {
   return (dispatch) => {
@@ -55,8 +58,8 @@ export const loadStops = (routeId, direction) => {
     .catch(err => {
       console.error(err.stack);
     });
-  }
-}
+  };
+};
 
 export const loadArrivals = (routeId, stopId) => {
   return (dispatch) => {
@@ -66,5 +69,5 @@ export const loadArrivals = (routeId, stopId) => {
     .catch(err => {
       console.error(err.stack);
     });
-  }
-}
+  };
+};
