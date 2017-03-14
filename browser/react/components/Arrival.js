@@ -44,11 +44,9 @@ class Arrival extends React.Component {
   render () {
     return (
       <div
-        className="col-xs-12 col-sm-12 col-md-4"
-        ref={el => {this.el = el;}}>
-        <div className="list-group-item" >
-          <h2><span>{this.predictionHandler(this.props.arrival)}</span></h2>
-        </div>
+        ref={el => {this.el = el;}}
+        className="list-group-item col-xs-12 col-sm-10 col-md-6">
+        {this.predictionHandler(this.props.arrival)}
       </div>
     )
   }

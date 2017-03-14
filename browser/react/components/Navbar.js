@@ -7,7 +7,7 @@ export default function Navbar() {
     <div className="navbar navbar-fixed-top shadow" role="navigation">
       <Link
         to="/"
-        className="navbar-brand">
+        className="title">
         <img
           src="/busTrackerOutline.png"
           alt="bus tracker logo"

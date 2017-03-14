@@ -10,11 +10,9 @@ export default (props) => {
     <div className="item-container">
       {
         routes && routes.map(route => (
-          <div className="col-xs-12" key={route.routeNumber}>
+          <div className="col-xs-12 col-sm-10 col-md-6 list-group-item" key={route.routeNumber}>
             <Link to={`/routes/${route.routeNumber}`}>
-              <div className="list-group-item" >
-                {`${route.routeNumber} ${route.name}`}
-              </div>
+              {`${route.routeNumber} ${route.name}`}
             </Link>
           </div>
         ))

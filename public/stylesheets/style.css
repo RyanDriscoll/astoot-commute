@@ -12,6 +12,12 @@ html {
 
 body {
   background: #e2e1e0;
+  border-radius: 2px;
+}
+
+a, a:hover {
+  text-decoration: none;
+  color: inherit;
 }
 
 .main {
@@ -37,35 +43,48 @@ body {
   background-color: #00897B;
 }
 
-.navbar-brand {
+.title {
   display: flex;
   align-items: center;
   justify-content: center;
   color: #F5F5F5;
   font-size: 5vh;
+  padding: 0;
 }
 
 
-.navbar-brand > img {
+.title > img {
   height: 8vh;
   display: inline-block;
 }
 
 .tracker-container {
   font-size: 4vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 15px;
 }
 
 .list-group-item {
   height: 15vh;
+  width: 100%;
   margin-top: 1vh;
   border: none;
   box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
   transition: all 0.3s cubic-bezier(.25,.8,.25,1);
 }
 
+
 .form-control {
   height: 5vh;
   font-size: 2vh;
+}
+
+.form-group {
+  margin: 15px;
 }
 
 .arrivalUpdate-enter {

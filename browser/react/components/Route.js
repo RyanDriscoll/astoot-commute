@@ -9,16 +9,18 @@ const Route = (props) => {
   return (
     <div className="tracker-container">
       {`${selectedRoute.routeNumber} ${selectedRoute.name}`}
-      {
-        directions && directions.map(direction => (
-          <div className="list-group-item" key={direction}>
-            <Link to={`/routes/${selectedRoute.routeNumber}/${direction}`}>
-                {direction}
-            </Link>
-          </div>
+        <div className="item-container">
+        {
+          directions && directions.map(direction => (
+            <div className="col-xs-12 col-sm-10 col-md-6 list-group-item" key={direction}>
+              <Link to={`/routes/${selectedRoute.routeNumber}/${direction}`}>
+                  {direction}
+              </Link>
+            </div>
+          )
         )
-      )
       }
+      </div>
     </div>
   );
 };
