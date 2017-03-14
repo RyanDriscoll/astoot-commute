@@ -15,14 +15,15 @@ export default (props) => {
   // todo - link to predictions
 
   return (
-    <div className="item-container">
+    <div className="item-container col-xs-10 col-sm-8 col-md-6">
       {
         stops && stops.map(stop => (
-          <div className="col-xs-12 col-sm-10 col-md-6 list-group-item" key={stop.id}>
-            <Link to={`/arrivals/${route.routeNumber}/${direction}/${stop.stopId}`}>
-             {stop.name}
-            </Link>
-          </div>
+          <Link
+            to={`/arrivals/${route.routeNumber}/${direction}/${stop.stopId}`}
+            className="list-group-item"
+            key={stop.id}>
+              {stop.name}
+          </Link>
         ))
       }
     </div>

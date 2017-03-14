@@ -7,7 +7,7 @@ import {loadAllRoutes, loadSelectedRoute, loadStops, loadArrivals} from './actio
 
 import App from './components/App';
 import Arrivals from './components/Arrivals';
-import SelectedRoute from './components/Route';
+import Directions from './components/Directions';
 import Login from './components/Login';
 import FilterableRoutesContainer from './containers/FilterableRoutesContainer';
 import FilterableStopsContainer from './containers/FilterableStopsContainer';
@@ -16,7 +16,7 @@ function onAppEnter() {
   store.dispatch(loadAllRoutes());
 }
 
-function onSelectedRouteEnter(nextRouterState) {
+function onDirectionsEnter(nextRouterState) {
   const routeId = nextRouterState.params.routeId;
   store.dispatch(loadSelectedRoute(routeId));
 }
@@ -34,7 +34,7 @@ ReactDOM.render(
       <Route path="/" component={App} onEnter={onAppEnter}>
         <IndexRoute component={FilterableRoutesContainer} />
         <Route path="/routes" component={FilterableRoutesContainer} />
-        <Route path="/routes/:routeId" component={SelectedRoute} onEnter={onSelectedRouteEnter} />
+        <Route path="/routes/:routeId" component={Directions} onEnter={onDirectionsEnter} />
         <Route path="/routes/:routeId/:direction" component={FilterableStopsContainer} onEnter={onStopsOrArrivalsEnter} />
         <Route path="/arrivals/:routeId/:direction/:stopId" component={Arrivals} onEnter={onStopsOrArrivalsEnter} />
         <Route path="/login" component={Login} />

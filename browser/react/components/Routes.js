@@ -7,14 +7,15 @@ export default (props) => {
   });
 
   return (
-    <div className="item-container">
+    <div className="item-container col-xs-10 col-sm-8 col-md-6 ">
       {
         routes && routes.map(route => (
-          <div className="col-xs-12 col-sm-10 col-md-6 list-group-item" key={route.routeNumber}>
-            <Link to={`/routes/${route.routeNumber}`}>
+          <Link
+            to={`/routes/${route.routeNumber}`}
+            className="list-group-item"
+            key={route.routeNumber}>
               {`${route.routeNumber} ${route.name}`}
-            </Link>
-          </div>
+          </Link>
         ))
       }
     </div>

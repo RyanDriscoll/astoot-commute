@@ -56,7 +56,7 @@ class Arrivals extends React.Component {
     return (
       <div className="tracker-container">
         {arrivals.length ? upcomingArrivals : errorMsg}
-        <div className="item-container">
+        <div className="item-container col-xs-10 col-sm-8 col-md-6">
           {
             !!arrivals.length && arrivals.map((arrival, i)=> (
               <Arrival arrival={arrival} index={i} key={arrival.vid} />
@@ -77,7 +77,7 @@ function mapStateToProps(state, ownProps) {
 export default connect(mapStateToProps)(Arrivals);
 
 // <TransitionGroup key={arrival.vid}>
-//                 <div className="col-xs-12 col-sm-12 col-md-4" >
+//                 <div className="col-xs-12 col-sm-12 col-md-6" >
 //                   <div className="list-group-item" >
 //                     <h2><span>{this.predictionHandler(i)}</span></h2>
 //                   </div>
