@@ -12,7 +12,7 @@ export default function Navbar() {
           src="/busTrackerOutline.png"
           alt="bus tracker logo"
         />
-        Astoot Commute
+        astoot commute
       </Link>
     </div>
   );

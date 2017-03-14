@@ -10,7 +10,7 @@ const FilterInput = (props) => {
       <input
         onChange={handleChange}
         value={inputValue}
-        className='form-control'
+        className='form-control shadow'
         placeholder="Filter results"
       />
     </form>
