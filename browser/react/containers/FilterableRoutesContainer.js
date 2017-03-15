@@ -21,7 +21,7 @@ class FilterableRoutesContainer extends React.Component {
       const element = document.querySelector('.heading-container');
       TweenLite
       .fromTo(element, 0.5, {x: -100, autoAlpha: 0}, {x: 0, autoAlpha: 1, display: 'flex', ease: Power2.easeOut})
-    }, 100);
+    }, 300);
   }
 
   handleChange(evt) {

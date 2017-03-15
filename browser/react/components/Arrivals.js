@@ -21,7 +21,7 @@ class Arrivals extends React.Component {
       const element = document.querySelector('.heading-container');
       TweenLite
       .fromTo(element, 0.5, {x: -100, autoAlpha: 0}, {x: 0, autoAlpha: 1, display: 'flex', ease: Power2.easeOut});
-    }, 100);
+    }, 200);
 
     const routeId = this.props.params.routeId;
     const stopId = this.props.params.stopId;
