@@ -29,11 +29,13 @@ class FilterableStopsContainer extends React.Component {
 
     return (
       <div className="tracker-container">
-        {`${route.routeNumber} ${route.name} ${direction}`}
-        <FilterInput
-          handleChange={this.handleChange}
-          inputValue={inputValue}
-        />
+        <div className="heading-container">
+          {`${route.routeNumber} ${route.name} ${direction}`}
+          <FilterInput
+            handleChange={this.handleChange}
+            inputValue={inputValue}
+          />
+        </div>
         <Stops
           stops={filteredStops}
           direction={direction}

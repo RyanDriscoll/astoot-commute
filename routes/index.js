@@ -41,6 +41,18 @@ router.get('/routes/:route/:direction', (req, res, next) => {
   .catch(next);
 });
 
+// get selected stop
+router.get('/stop/:stopId/:direction', (req, res, next) => {
+  Stop.findOne({
+    where: {
+      stopId: req.params.stopId,
+      direction: req.params.direction
+    }
+  })
+  .then(stop => res.json(stop))
+  .catch(next);
+});
+
 // get arrival predictions
 router.get('/arrivals/:routeId/:stopId', (req, res, next) => {
   axios.get(`${ctaApiPrefix}getpredictions?key=${ApiKey}&rt=${req.params.routeId}&stpid=${req.params.stopId}${format}`)

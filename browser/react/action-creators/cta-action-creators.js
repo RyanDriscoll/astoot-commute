@@ -3,6 +3,7 @@ import {
   RECEIVE_BUS_ROUTES,
   RECEIVE_BUS_ROUTE,
   RECEIVE_BUS_STOPS,
+  RECEIVE_BUS_STOP,
   RECEIVE_ARRIVALS
 } from '../constants';
 
@@ -15,6 +16,11 @@ export const receiveRoutes = routes => ({
 export const receieveSelectedRoute = route => ({
   type: RECEIVE_BUS_ROUTE,
   selectedRoute: route
+});
+
+export const receieveSelectedStop = stop => ({
+  type: RECEIVE_BUS_STOP,
+  selectedStop: stop
 });
 
 export const receiveStops = (stops, direction) => ({
@@ -44,6 +50,17 @@ export const loadSelectedRoute = (routeId) => {
     axios.get(`/api/routes/${routeId}`)
     .then(res => res.data)
     .then(route => dispatch(receieveSelectedRoute(route)))
+    .catch(err => {
+      console.error(err.stack);
+    });
+  };
+};
+
+export const loadSelectedStop = (stopId, direction) => {
+  return (dispatch) => {
+    axios.get(`/api/stop/${stopId}/${direction}`)
+    .then(res => res.data)
+    .then(stop => dispatch(receieveSelectedStop(stop)))
     .catch(err => {
       console.error(err.stack);
     });

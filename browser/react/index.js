@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import {Router, Route, browserHistory, IndexRedirect, IndexRoute} from 'react-router';
 import {Provider} from 'react-redux';
 import store from './store';
-import {loadAllRoutes, loadSelectedRoute, loadStops, loadArrivals} from './action-creators/cta-action-creators';
+import {loadAllRoutes, loadSelectedRoute, loadStops, loadSelectedStop, loadArrivals} from './action-creators/cta-action-creators';
 
 import App from './components/App';
 import Arrivals from './components/Arrivals';
@@ -24,8 +24,12 @@ function onDirectionsEnter(nextRouterState) {
 function onStopsOrArrivalsEnter(nextRouterState) {
   const routeId = nextRouterState.params.routeId;
   const direction = nextRouterState.params.direction;
+  const stopId = nextRouterState.params.stopId;
   store.dispatch(loadStops(routeId, direction));
   store.dispatch(loadSelectedRoute(routeId));
+  if (stopId) {
+    store.dispatch(loadSelectedStop(stopId, direction));
+  }
 }
 
 ReactDOM.render(

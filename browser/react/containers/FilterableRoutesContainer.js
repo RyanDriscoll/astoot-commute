@@ -2,36 +2,27 @@ import React from 'react';
 import FilterInput from '../components/FilterInput';
 import Routes from '../components/Routes';
 import {connect} from 'react-redux';
+import {TweenLite, TimelineLite} from 'gsap';
 
-
-import store from '../store';
 
 class FilterableRoutesContainer extends React.Component {
 
   constructor(props) {
 
     super(props);
-
-    // this.state = Object.assign({
-    //   inputValue: ''
-    // }, store.getState());
     this.state = {
       inputValue: ''
     };
-
     this.handleChange = this.handleChange.bind(this);
-
   }
 
-  // componentDidMount() {
-  //   this.unsubscribe = store.subscribe(() => {
-  //     this.setState(store.getState());
-  //   });
-  // }
-
-  // componentWillUnmount() {
-  //   this.unsubscribe();
-  // }
+  componentDidMount() {
+    setTimeout(function() {
+      const element = document.querySelector('.heading-container');
+      TweenLite
+      .fromTo(element, 0.5, {x: -100, autoAlpha: 0}, {x: 0, autoAlpha: 1, display: 'flex', ease: Power2.easeOut})
+    }, 100);
+  }
 
   handleChange(evt) {
     this.setState({
@@ -48,11 +39,13 @@ class FilterableRoutesContainer extends React.Component {
 
     return (
       <div className="tracker-container">
-        Select a route
-        <FilterInput
-          handleChange={this.handleChange}
-          inputValue={inputValue}
-        />
+        <div className="heading-container">
+            Select a route
+          <FilterInput
+            handleChange={this.handleChange}
+            inputValue={inputValue}
+          />
+        </div>
         <Routes routes={filteredRoutes}/>
       </div>
     );

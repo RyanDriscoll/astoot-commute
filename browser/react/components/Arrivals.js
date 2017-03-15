@@ -28,7 +28,6 @@ class Arrivals extends React.Component {
   }
 
   getArrivals(routeId, stopId) {
-    console.log('updating arrivals...')
     axios.get(`/api/arrivals/${routeId}/${stopId}`)
     .then(res => res.data['bustime-response'])
     .then(arrivalsObj => {
@@ -49,13 +48,17 @@ class Arrivals extends React.Component {
     const arrivals = this.state.arrivals;
     const errorMsg = this.state.errorMsg;
     const routeNumber = this.props.selectedRoute.routeNumber;
-    const name = this.props.selectedRoute.name;
+    const routeName = this.props.selectedRoute.name;
+    const stopName = this.props.selectedStop.name;
     const direction = this.props.params.direction;
-    const upcomingArrivals = `${routeNumber} ${name} ${direction}: `;
+    const upcomingArrivals = `${routeNumber} ${routeName} ${direction}: `;
 
     return (
       <div className="tracker-container">
-        {arrivals.length ? upcomingArrivals : errorMsg}
+        <div className="heading-container">
+          {arrivals.length ? upcomingArrivals : errorMsg}<br />
+          {stopName}
+        </div>
         <div className="item-container col-xs-10 col-sm-8 col-md-6">
           {
             !!arrivals.length && arrivals.map((arrival, i)=> (
@@ -64,22 +67,15 @@ class Arrivals extends React.Component {
           }
         </div>
       </div>
-    )
+    );
   }
 }
 
 function mapStateToProps(state, ownProps) {
   return {
-    selectedRoute: state.cta.selectedRoute
+    selectedRoute: state.cta.selectedRoute,
+    selectedStop: state.cta.selectedStop
   };
 }
 
 export default connect(mapStateToProps)(Arrivals);
-
-// <TransitionGroup key={arrival.vid}>
-//                 <div className="col-xs-12 col-sm-12 col-md-6" >
-//                   <div className="list-group-item" >
-//                     <h2><span>{this.predictionHandler(i)}</span></h2>
-//                   </div>
-//                 </div>
-//               </TransitionGroup>

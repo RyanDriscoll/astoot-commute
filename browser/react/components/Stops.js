@@ -12,8 +12,6 @@ export default (props) => {
   });
   const route = props.selectedRoute;
 
-  // todo - link to predictions
-
   return (
     <div className="item-container col-xs-10 col-sm-8 col-md-6">
       {
@@ -27,5 +25,5 @@ export default (props) => {
         ))
       }
     </div>
-  )
-}
+  );
+};

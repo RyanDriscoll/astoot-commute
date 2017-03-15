@@ -1,5 +1,5 @@
 import React from 'react';
-import {TweenLite} from 'gsap';
+import {TweenLite, TimelineLite} from 'gsap';
 
 class Arrival extends React.Component {
   constructor(props) {
@@ -8,20 +8,31 @@ class Arrival extends React.Component {
   }
 
   componentDidMount() {
-    TweenLite.fromTo(this.el, 1, {y: 100, opacity: 0}, {y: 0, opacity: 1});
+        console.log('in component did mount', this.el)
+
+    TweenLite.fromTo(this.el, 0.5, {x: 100, autoAlpha: 0}, {x: 0, display: 'flex', autoAlpha: 1});
+
+    this.update = new TimelineLite({paused: true})
+      .to(this.el, 0.3, {
+        scale: 0,
+        ease: Power2.easeOut
+      })
+      .to(this.el, 0.3, {
+        scale: 1,
+        ease: Power2.easeOut
+      });
   }
 
   shouldComponentUpdate(nextProps){
-    console.log('is it in shouldComponentUpdate?', nextProps.arrival.prdctdn, this.props.arrival.prdctdn)
     if (nextProps.arrival.prdctdn === this.props.arrival.prdctdn) return false;
     return true;
   }
 
   componentWillUpdate(nextProps, nextState){
-    TweenLite.fromTo(this.el, 0.3, {y: 0, opacity: 1}, {y: 100, opacity: 0, onComplete: () => {
-      TweenLite.fromTo(this.el, 1, {y: -100, opacity: 0, color: 'blue'}, {y: 0, opacity: 1, color: 'black'});
-      }
-    });
+    // TweenLite.to(this.el, 0.3, {autoAlpha: 0})
+    //   .fromTo(this.el, 0.5, {x: 100, autoAlpha: 0}, {x: 0, autoAlpha: 1});
+    this.update.pause(0, true);
+    this.update.play();
   }
 
   predictionHandler(arrival) {
