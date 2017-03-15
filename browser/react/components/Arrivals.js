@@ -2,6 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import axios from 'axios';
 import Arrival from './Arrival';
+import {TweenLite, TimelineLite} from 'gsap';
 
 class Arrivals extends React.Component {
 
@@ -16,6 +17,12 @@ class Arrivals extends React.Component {
   }
 
   componentDidMount() {
+    setTimeout(function() {
+      const element = document.querySelector('.heading-container');
+      TweenLite
+      .fromTo(element, 0.5, {x: -100, autoAlpha: 0}, {x: 0, autoAlpha: 1, display: 'flex', ease: Power2.easeOut});
+    }, 100);
+
     const routeId = this.props.params.routeId;
     const stopId = this.props.params.stopId;
     this.getArrivals(routeId, stopId);
@@ -55,7 +62,7 @@ class Arrivals extends React.Component {
 
     return (
       <div className="tracker-container">
-        <div className="heading-container">
+        <div className="heading-container col-xs-10 col-sm-8 col-md-6">
           {arrivals.length ? upcomingArrivals : errorMsg}<br />
           {stopName}
         </div>

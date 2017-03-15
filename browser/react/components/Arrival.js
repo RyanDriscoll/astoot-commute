@@ -8,8 +8,6 @@ class Arrival extends React.Component {
   }
 
   componentDidMount() {
-        console.log('in component did mount', this.el)
-
     TweenLite.fromTo(this.el, 0.5, {x: 100, autoAlpha: 0}, {x: 0, display: 'flex', autoAlpha: 1});
 
     this.update = new TimelineLite({paused: true})
@@ -29,8 +27,6 @@ class Arrival extends React.Component {
   }
 
   componentWillUpdate(nextProps, nextState){
-    // TweenLite.to(this.el, 0.3, {autoAlpha: 0})
-    //   .fromTo(this.el, 0.5, {x: 100, autoAlpha: 0}, {x: 0, autoAlpha: 1});
     this.update.pause(0, true);
     this.update.play();
   }

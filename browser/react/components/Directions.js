@@ -27,7 +27,7 @@ class Directions extends React.Component {
 
     return (
       <div className="tracker-container">
-        <div className="heading-container">
+        <div className="heading-container col-xs-10 col-sm-8 col-md-6">
           {`${selectedRoute.routeNumber} ${selectedRoute.name}`}
         </div>
         <div className="item-container col-xs-10 col-sm-8 col-md-6 ">

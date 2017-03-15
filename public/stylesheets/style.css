@@ -40,11 +40,11 @@ a, a:hover, a:focus, a:visited {
   align-items: center;
   justify-content: center;
   height: 15vh;
-  background-color: #00897B;
+  background-color: #26A69A;
 }
 
 .title {
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   color: #F5F5F5;
@@ -75,6 +75,7 @@ a, a:hover, a:focus, a:visited {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  margin-bottom: 10px;
 }
 
 .list-group-item {
@@ -105,6 +106,7 @@ a.list-group-item:hover {
 
 .form-group {
   margin: 15px;
+  width: 100%;
 }
 
 /*.arrivalUpdate-enter {

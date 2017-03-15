@@ -39,7 +39,7 @@ class FilterableRoutesContainer extends React.Component {
 
     return (
       <div className="tracker-container">
-        <div className="heading-container">
+        <div className="heading-container col-xs-10 col-sm-8 col-md-6">
             Select a route
           <FilterInput
             handleChange={this.handleChange}
