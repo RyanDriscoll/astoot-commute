@@ -33,7 +33,7 @@ class FilterableStopsContainer extends React.Component {
       }
       this.tl = new TimelineLite()
       .staggerFromTo(elArray, 0.2, {x: 100, autoAlpha: 0}, {x: 0, autoAlpha: 1, display: 'flex', ease: Power2.easeOut}, 0.1)
-    }, 100);
+    }, 200);
   }
 
   render() {
